@@ -1,0 +1,75 @@
+html {
+  font-size: 62.5%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #333;
+  background-color: #fff;
+}
+
+.slider {
+ /*  border: 1px solid black; */
+  width: 100%;
+  margin: 10px;
+}
+/*   .autor-img{
+    background: rebeccapurple;
+  } */
+.autor-img img {
+  width: 100%;
+  border-radius: 8px;
+}
+/*  .datos-autor{
+    background: pink;
+  } */
+
+.datos-autor {
+  display: flex;
+  align-items: center;
+}
+.uni-logos {
+  padding: 30px;
+}
+.uni-logos .laboratorios {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+}
+.uni-logos .universidad img {
+  width: 100%;
+}
+.uni-logos .laboratorios img {
+  width: 30%;
+}
+/* .author-name{
+    background: red;
+} */
+.author-name h1 {
+  font-size: 4rem;
+  font-weight: bold;
+}
+.author-name h5 {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+.detalles-autor {
+  /*     background: green; */
+  display: flex;
+  text-align: center;
+}
+.detalles-autor div {
+  padding-right: 20px;
+}
+.detalles-autor h1 {
+  font-size: 4rem;
+  font-weight: bold;
+}
