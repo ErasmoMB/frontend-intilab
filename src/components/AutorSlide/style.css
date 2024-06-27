@@ -1,3 +1,4 @@
+/* style.css */
 html {
   font-size: 62.5%;
 }
@@ -17,59 +18,91 @@ body {
 }
 
 .slider {
- /*  border: 1px solid black; */
-  width: 100%;
   margin: 10px;
+  position: relative;
+  overflow: hidden;
 }
-/*   .autor-img{
-    background: rebeccapurple;
-  } */
+
 .autor-img img {
   width: 100%;
   border-radius: 8px;
+  border: 3px solid black;
 }
-/*  .datos-autor{
-    background: pink;
-  } */
 
 .datos-autor {
   display: flex;
   align-items: center;
 }
+
 .uni-logos {
   padding: 30px;
 }
+
 .uni-logos .laboratorios {
   margin-top: 10px;
   display: flex;
   justify-content: center;
 }
+
 .uni-logos .universidad img {
   width: 100%;
 }
+
 .uni-logos .laboratorios img {
   width: 30%;
 }
-/* .author-name{
-    background: red;
-} */
+
 .author-name h1 {
   font-size: 4rem;
-  font-weight: bold;
+  font-weight: bolder;
 }
+
 .author-name h5 {
   font-size: 1.5rem;
   font-weight: bold;
 }
+
+.author-name p {
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
 .detalles-autor {
-  /*     background: green; */
   display: flex;
   text-align: center;
 }
+
 .detalles-autor div {
   padding-right: 20px;
 }
+
 .detalles-autor h1 {
   font-size: 4rem;
   font-weight: bold;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+
+.slide-animate {
+  animation: slideOut 0.5s ease-out, slideIn 0.5s 0.5s ease-out;
 }

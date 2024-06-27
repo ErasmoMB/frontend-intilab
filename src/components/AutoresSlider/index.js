@@ -1,7 +1,7 @@
 // AutoresSlider.js
-import React, { useEffect, useState } from 'react';
-import { getAutores, getCitacionesTotales } from '../Api';
-import Slider from '../Slider';
+import React, { useEffect, useState } from "react";
+import { getAutores, getCitacionesTotales } from "../Api";
+import Slider from "../Slider";
 
 function AutoresSlider() {
   const [autores, setAutores] = useState([]);
@@ -12,31 +12,29 @@ function AutoresSlider() {
     const fetchData = async () => {
       const autoresResponse = await getAutores();
       setAutores(autoresResponse.autores);
-      const citaciones = await Promise.all(autoresResponse.autores.map(autor => getCitacionesTotales(autor['dc:identifier'])));
+      const citaciones = await Promise.all(
+        autoresResponse.autores.map((autor) =>
+          getCitacionesTotales(autor["dc:identifier"])
+        )
+      );
       setCitacionesTotales(citaciones);
     };
-    
     fetchData();
   }, []);
 
   useEffect(() => {
-    const fetchCitaciones = async () => {
-      if (autores.length > 0 && autores[currentIndex]) {
-        const citaciones = await getCitacionesTotales(autores[currentIndex]['dc:identifier']);
-        setCitacionesTotales(citaciones);
-      }
-    };
-  
-    fetchCitaciones();
-  
     const timer = setInterval(() => {
-      setCurrentIndex((currentIndex + 1) % autores.length);
-    }, 3000);
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % autores.length);
+    }, 5000); // Cambiar a 5000 ms (5 segundos)
     return () => clearInterval(timer);
-  }, [currentIndex, autores]);
+  }, [autores]);
 
   return (
-    <Slider autores={autores} currentIndex={currentIndex} citacionesTotales={citacionesTotales} />
+    <Slider
+      autores={autores}
+      currentIndex={currentIndex}
+      citacionesTotales={citacionesTotales}
+    />
   );
 }
 

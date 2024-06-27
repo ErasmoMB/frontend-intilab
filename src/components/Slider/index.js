@@ -1,6 +1,6 @@
 // Slider.js
-import React from 'react';
-import AutorSlide from '../AutorSlide';
+import React from "react";
+import AutorSlide from "../AutorSlide";
 
 function Slider({ autores, currentIndex, citacionesTotales }) {
   return (
