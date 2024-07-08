@@ -1,4 +1,3 @@
-/* style.css */
 html {
   font-size: 62.5%;
 }
@@ -17,10 +16,19 @@ body {
   background-color: #fff;
 }
 
+.author-banner {
+  height: 100vh; /* Ocupa el 100% del alto de la pantalla */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .slider {
   margin: 10px;
   position: relative;
   overflow: hidden;
+  /*   width: 100%; */
+  height: 100%;
 }
 
 .autor-img img {

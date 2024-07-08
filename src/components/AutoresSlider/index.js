@@ -1,49 +1,39 @@
-import React, { useState, useEffect } from "react";
+// AutoresSlider.js
+import React, { useEffect, useState } from "react";
+import { getAutores, getCitacionesTotales } from "../Api";
 import Slider from "../Slider";
-import AutorSlide from "../AutorSlide";
 
 function AutoresSlider() {
-  const [autores] = useState([
-    {
-      nombre: "ROMERO ALVA VICTOR NIELS",
-      descripcion: "MAGÍSTER EN EL ÁREA DE SISTEMA DE MISILES Y COSMONÁUTICA",
-      bachiller:
-        "BACHILLER EN INGENIERÍA ELECTRÓNICA CON MENCIÓN EN TELECOMUNICACIONES",
-      image: require("../../assets/Investigadores/Victor_Romero.jpg"),
-      citas: {
-        numero: 14,
-        documentos: 25,
-      },
-    },
-    {
-      nombre: "ROMERO ALVA VICTOR NIELS",
-      descripcion: "MAGÍSTER EN EL ÁREA DE SISTEMA DE MISILES Y COSMONÁUTICA",
-      bachiller:
-        "BACHILLER EN INGENIERÍA ELECTRÓNICA CON MENCIÓN EN TELECOMUNICACIONES",
-      image: require("../../assets/Investigadores/Victor_Romero.jpg"),
-      citas: {
-        numero: 14,
-        documentos: 25,
-      },
-    },
-    // Agrega más autores si es necesario
-  ]);
-
+  const [autores, setAutores] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [citacionesTotales, setCitacionesTotales] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const autoresResponse = await getAutores();
+      setAutores(autoresResponse.autores);
+      const citaciones = await Promise.all(
+        autoresResponse.autores.map((autor) =>
+          getCitacionesTotales(autor["dc:identifier"])
+        )
+      );
+      setCitacionesTotales(citaciones);
+    };
+    fetchData();
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % autores.length);
     }, 5000); // Cambiar a 5000 ms (5 segundos)
-
-    return () => clearInterval(timer); // Limpia el intervalo al desmontar el componente
+    return () => clearInterval(timer);
   }, [autores]);
 
   return (
-    <AutorSlide
-      autor={autores[currentIndex]}
-      totalCitas={autores[currentIndex].citas.numero}
-      isVisible={true} // Mostrar siempre el slide actual
+    <Slider
+      autores={autores}
+      currentIndex={currentIndex}
+      citacionesTotales={citacionesTotales}
     />
   );
 }

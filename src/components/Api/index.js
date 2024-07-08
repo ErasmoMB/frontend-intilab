@@ -1,20 +1,22 @@
-import axios from 'axios';
+import axios from "axios";
 
 export async function getAutores() {
-  const response = await axios.get('http://127.0.0.1:5000/autores');
-  console.log(response.data);  
+  const response = await axios.get("http://127.0.0.1:5000/autores");
+  console.log(response.data);
   return response.data;
 }
 
 export async function getDocumentos() {
-  const response = await axios.get('http://127.0.0.1:5000/documentos');
-  console.log(response.data);  
+  const response = await axios.get("http://127.0.0.1:5000/documentos");
+  console.log(response.data);
   return response.data;
 }
 
 export async function getDocumentosAfiliados() {
-  const response = await axios.get('http://127.0.0.1:5000/documentos_afiliados');
-  console.log(response.data);  
+  const response = await axios.get(
+    "http://127.0.0.1:5000/documentos_afiliados"
+  );
+  console.log(response.data);
   return response.data;
 }
 
@@ -25,8 +27,8 @@ export async function getCitacionesTotales(autorId) {
   let totalCitaciones = 0;
   for (let documento of documentos) {
     // Comprueba si el campo 'citedby-count' existe y es un número
-    if (documento['citedby-count'] && !isNaN(documento['citedby-count'])) {
-      totalCitaciones += parseInt(documento['citedby-count'], 10);
+    if (documento["citedby-count"] && !isNaN(documento["citedby-count"])) {
+      totalCitaciones += parseInt(documento["citedby-count"], 10);
     }
   }
 
@@ -34,7 +36,9 @@ export async function getCitacionesTotales(autorId) {
 }
 
 async function getDocumentosDeAutor(autorId) {
-  const response = await axios.get(`http://127.0.0.1:5000/documentos?dc:identifier=${autorId}`);
-  console.log(response.data);  
+  const response = await axios.get(
+    `http://127.0.0.1:5000/documentos?dc:identifier=${autorId}`
+  );
+  console.log(response.data);
   return response.data.documentos;
 }
