@@ -1,22 +1,19 @@
-import React, { useState, useEffect } from "react";
+// AutorSlide.js
+import React from "react";
 import "./style.css";
+import authorImage from "../../assets/Investigadores/Victor_Romero.jpg";
 import uch from "../../assets/Logos/logo-uch.png";
 import intilab from "../../assets/Logos/intilab.png";
 import ehealth from "../../assets/Logos/ehealth.png";
 import ciics from "../../assets/Logos/ciics.png";
 
 function AutorSlide({ autor, totalCitas, isVisible }) {
-  const [isAnimating, setIsAnimating] = useState(false);
-  const [isEntering, setIsEntering] = useState(false);
+  const [isAnimating, setIsAnimating] = React.useState(false);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (isVisible) {
-      setIsEntering(true);
-      setTimeout(() => setIsAnimating(true), 50); // Inicia la animación de entrada después de 50ms
-      const timeoutId = setTimeout(() => {
-        setIsEntering(false);
-        setIsAnimating(false);
-      }, 1000); // Duración de la animación (1s)
+      setIsAnimating(true);
+      const timeoutId = setTimeout(() => setIsAnimating(false), 1000); // Duración de la animación (1s)
       return () => clearTimeout(timeoutId);
     }
   }, [autor, isVisible]); // Este efecto se dispara cada vez que `autor` o `isVisible` cambian
@@ -27,28 +24,36 @@ function AutorSlide({ autor, totalCitas, isVisible }) {
       style={{ display: isVisible ? "flex" : "none" }}
     >
       <div className={`slider ${isAnimating ? "slide-animate" : ""}`}>
-        <div className={`row ${isEntering ? "slide-enter" : ""}`}>
+        <div className="row">
           <div className="col-12 col-sm-4 col-md-3 col-lg-2 autor-img d-flex justify-content-center align-items-center">
             <img
-              src={autor.image}
-              alt={`Imagen de ${autor.nombre}`}
+              src={authorImage}
+              alt="Imagen del autor"
               className="img-fluid"
             />
           </div>
           <div className="col-12 col-sm-8 col-md-6 col-lg-6 datos-autor">
             <div className="author-research-output">
               <div className="author-name">
-                <h1>{autor.nombre}</h1>
-                <h5>{autor.descripcion}</h5>
-                <p>{autor.bachiller}</p>
+                <h1>
+                  {autor["preferred-name"]["given-name"]}{" "}
+                  {autor["preferred-name"]["surname"]}
+                </h1>
+                <h5>
+                  MAGÍSTER EN EL ÁREA DE SISTEMA DE MISILES Y COSMONÁUTICA
+                </h5>
+                <p>
+                  BACHILLER EN INGENIERÍA ELECTRÓNICA CON MENCIÓN EN
+                  TELECOMUNICACIONES
+                </p>
               </div>
               <div className="detalles-autor">
                 <div className="author-citations">
-                  <h1>N°{autor.citas.numero}</h1>
-                  <p>citaciones de {autor.citas.documentos} documentos</p>
+                  <h1>N°{totalCitas}</h1>
+                  <p>citaciones de {autor["document-count"]} documentos</p>
                 </div>
                 <div>
-                  <h1>{autor.citas.documentos}</h1>
+                  <h1>{autor["document-count"]}</h1>
                   <p>documentos</p>
                 </div>
               </div>

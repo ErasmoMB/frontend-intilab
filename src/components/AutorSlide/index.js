@@ -1,61 +1,80 @@
-// AutorSlide.js
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import "./style.css";
-import authorImage from "../../assets/Investigadores/Victor_Romero.jpg";
+
 import uch from "../../assets/Logos/logo-uch.png";
 import intilab from "../../assets/Logos/intilab.png";
 import ehealth from "../../assets/Logos/ehealth.png";
 import ciics from "../../assets/Logos/ciics.png";
 
-function AutorSlide({ autor, totalCitas, isVisible }) {
-  const [isAnimating, setIsAnimating] = React.useState(false);
+const AutorSlide = () => {
+  const [autores, setAutores] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
 
-  React.useEffect(() => {
-    if (isVisible) {
-      setIsAnimating(true);
-      const timeoutId = setTimeout(() => setIsAnimating(false), 1000); // Duración de la animación (1s)
-      return () => clearTimeout(timeoutId);
+  useEffect(() => {
+    const fetchAutores = async () => {
+      const url = "http://127.0.0.1:2000/datos"; // Cambia la URL según tu configuración
+      try {
+        const response = await axios.get(url);
+        setAutores(response.data);
+      } catch (error) {
+        console.error("Error al obtener los autores:", error);
+      }
+    };
+
+    fetchAutores();
+  }, []);
+
+  useEffect(() => {
+    if (autores.length > 0) {
+      const intervalId = setInterval(() => {
+        setIsAnimating(true);
+        setTimeout(() => {
+          setCurrentIndex((prevIndex) => (prevIndex + 1) % autores.length);
+          setIsAnimating(false);
+        }, 1000); // Duración de la animación (1s)
+      }, 8000); // Cambia de autor cada 5 segundos
+
+      return () => clearInterval(intervalId);
     }
-  }, [autor, isVisible]); // Este efecto se dispara cada vez que `autor` o `isVisible` cambian
+  }, [autores]);
+
+  if (autores.length === 0) {
+    return <div>Cargando autores...</div>;
+  }
+
+  const autor = autores[currentIndex];
+
+  const getFontSize = (index) => {
+    const baseSize = 2.5; // Tamaño base de la fuente
+    const decrement = 0.5; // Decremento por cada índice
+    return `${baseSize - index * decrement}rem`;
+  };
 
   return (
-    <section
-      className="author-banner"
-      style={{ display: isVisible ? "flex" : "none" }}
-    >
+    <section className="author-banner">
       <div className={`slider ${isAnimating ? "slide-animate" : ""}`}>
         <div className="row">
           <div className="col-12 col-sm-4 col-md-3 col-lg-2 autor-img d-flex justify-content-center align-items-center">
             <img
-              src={authorImage}
-              alt="Imagen del autor"
+              src={autor.ruta_imagen}
+              alt={`Imagen de ${autor.nombre}`}
               className="img-fluid"
             />
           </div>
           <div className="col-12 col-sm-8 col-md-6 col-lg-6 datos-autor">
             <div className="author-research-output">
               <div className="author-name">
-                <h1>
-                  {autor["preferred-name"]["given-name"]}{" "}
-                  {autor["preferred-name"]["surname"]}
-                </h1>
-                <h5>
-                  MAGÍSTER EN EL ÁREA DE SISTEMA DE MISILES Y COSMONÁUTICA
-                </h5>
-                <p>
-                  BACHILLER EN INGENIERÍA ELECTRÓNICA CON MENCIÓN EN
-                  TELECOMUNICACIONES
-                </p>
+                <h1>{autor.nombre}</h1>
+                {autor.grado_academico.map((grado, index) => (
+                  <h5 key={index} style={{ fontSize: getFontSize(index) }}>
+                    {grado}
+                  </h5>
+                ))}
               </div>
               <div className="detalles-autor">
-                <div className="author-citations">
-                  <h1>N°{totalCitas}</h1>
-                  <p>citaciones de {autor["document-count"]} documentos</p>
-                </div>
-                <div>
-                  <h1>{autor["document-count"]}</h1>
-                  <p>documentos</p>
-                </div>
+                {/* Agrega detalles adicionales del autor si es necesario */}
               </div>
             </div>
           </div>
@@ -76,6 +95,6 @@ function AutorSlide({ autor, totalCitas, isVisible }) {
       </div>
     </section>
   );
-}
+};
 
 export default AutorSlide;

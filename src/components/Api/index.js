@@ -42,3 +42,19 @@ async function getDocumentosDeAutor(autorId) {
   console.log(response.data);
   return response.data.documentos;
 }
+
+export async function getDatos() {
+  const url = "http://127.0.0.1:2000/datos"; // Cambia la URL según tu configuración
+  try {
+    const response = await axios.get(url);
+    return response.data.map((autor) => ({
+      id: autor.autor_id,
+      nombre: autor.nombre,
+      gradosAcademicos: autor.grado_academico,
+      rutaImagen: autor.ruta_imagen,
+    }));
+  } catch (error) {
+    console.error("Error al obtener los autores:", error);
+    return []; // Retorna un array vacío en caso de error
+  }
+}
