@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import "./style.css";
 
 import uch from "../../assets/Logos/logo-uch.png";
@@ -6,19 +7,17 @@ import intilab from "../../assets/Logos/intilab.png";
 import ehealth from "../../assets/Logos/ehealth.png";
 import ciics from "../../assets/Logos/ciics.png";
 
-import { getDatos, getCitacionesTotales } from "../Api";
-
 const AutorSlide = () => {
   const [autores, setAutores] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [totalCitas, setTotalCitas] = useState(0); // Estado para almacenar el total de citas
 
   useEffect(() => {
     const fetchAutores = async () => {
+      const url = "http://127.0.0.1:5000/datos"; // Cambia la URL según tu configuración
       try {
-        const data = await getDatos(); // Obtener datos de autores
-        setAutores(data);
+        const response = await axios.get(url);
+        setAutores(response.data);
       } catch (error) {
         console.error("Error al obtener los autores:", error);
       }
@@ -28,15 +27,6 @@ const AutorSlide = () => {
   }, []);
 
   useEffect(() => {
-    const fetchTotalCitas = async () => {
-      if (autores.length > 0) {
-        const citas = await getCitacionesTotales(autores[currentIndex].id);
-        setTotalCitas(citas);
-      }
-    };
-
-    fetchTotalCitas();
-
     if (autores.length > 0) {
       const intervalId = setInterval(() => {
         setIsAnimating(true);
@@ -48,7 +38,7 @@ const AutorSlide = () => {
 
       return () => clearInterval(intervalId);
     }
-  }, [autores, currentIndex]);
+  }, [autores]);
 
   if (autores.length === 0) {
     return <div>Cargando autores...</div>;
@@ -62,16 +52,13 @@ const AutorSlide = () => {
     return `${baseSize - index * decrement}rem`;
   };
 
-  // Verificar si autor.documentos está definido antes de acceder a su propiedad length
-  const numDocumentos = autor.documentos ? autor.documentos.length : 0;
-
   return (
     <section className="author-banner">
       <div className={`slider ${isAnimating ? "slide-animate" : ""}`}>
         <div className="row">
           <div className="col-12 col-sm-4 col-md-3 col-lg-2 autor-img d-flex justify-content-center align-items-center">
             <img
-              src={autor.rutaImagen} // Asegúrate de que la estructura del autor coincida con los datos devueltos por getDatos()
+              src={autor.ruta_imagen}
               alt={`Imagen de ${autor.nombre}`}
               className="img-fluid"
             />
@@ -80,21 +67,14 @@ const AutorSlide = () => {
             <div className="author-research-output">
               <div className="author-name">
                 <h1>{autor.nombre}</h1>
-                {autor.gradosAcademicos.map((grado, index) => (
+                {autor.grado_academico.map((grado, index) => (
                   <h5 key={index} style={{ fontSize: getFontSize(index) }}>
                     {grado}
                   </h5>
                 ))}
               </div>
               <div className="detalles-autor">
-                <div className="author-citations">
-                  <h1>N°{totalCitas}</h1>
-                  <p>citaciones de {numDocumentos} documentos</p>
-                </div>
-                <div>
-                  <h1>{numDocumentos}</h1>
-                  <p>documentos</p>
-                </div>
+                {/* Agrega detalles adicionales del autor si es necesario */}
               </div>
             </div>
           </div>
