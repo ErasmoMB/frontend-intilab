@@ -1,50 +1,35 @@
 import axios from "axios";
 
-const BASE_URL = "http://127.0.0.1:5000";
+const baseUrl = "http://127.0.0.1:5000"; // Base URL de tu backend
 
-export async function getAutores() {
-  const response = await axios.get(`${BASE_URL}/autores`);
-  console.log(response.data);
-  return response.data;
-}
-
-export async function getDocumentos() {
-  const response = await axios.get(`${BASE_URL}/documentos`);
-  console.log(response.data);
-  return response.data;
-}
-
-export async function getCitacionesTotales(autorId) {
-  const documentos = await getDocumentosDeAutor(autorId);
-  let totalCitaciones = 0;
-  for (let documento of documentos) {
-    if (documento["citedby-count"] && !isNaN(documento["citedby-count"])) {
-      totalCitaciones += parseInt(documento["citedby-count"], 10);
-    }
-  }
-  return totalCitaciones;
-}
-
-async function getDocumentosDeAutor(autorId) {
-  const response = await axios.get(
-    `${BASE_URL}/documentos?dc:identifier=${autorId}`
-  );
-  console.log(response.data);
-  return response.data.documentos;
-}
-
-export async function getDatos() {
-  const url = `${BASE_URL}/datos`;
+const obtenerDatosBasicosAutores = async () => {
   try {
-    const response = await axios.get(url);
-    return response.data.map((autor) => ({
-      id: autor.autor_id,
-      nombre: autor.nombre,
-      gradosAcademicos: autor.grado_academico,
-      rutaImagen: autor.ruta_imagen,
-    }));
+    const response = await axios.get(`${baseUrl}/datos`);
+    return response.data;
   } catch (error) {
-    console.error("Error al obtener los autores:", error);
-    return [];
+    console.error("Error al obtener datos básicos de autores:", error);
+    throw error;
   }
-}
+};
+
+const obtenerAutores = async () => {
+  try {
+    const response = await axios.get(`${baseUrl}/autores`);
+    return response.data.autores;
+  } catch (error) {
+    console.error("Error al obtener datos de autores:", error);
+    throw error;
+  }
+};
+
+const obtenerDocumentos = async () => {
+  try {
+    const response = await axios.get(`${baseUrl}/documentos`);
+    return response.data.documentos;
+  } catch (error) {
+    console.error("Error al obtener datos de documentos:", error);
+    throw error;
+  }
+};
+
+export { obtenerDatosBasicosAutores, obtenerAutores, obtenerDocumentos };
