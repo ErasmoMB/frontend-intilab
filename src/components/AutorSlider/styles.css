@@ -24,7 +24,7 @@ body {
 }
 
 .slider {
-  margin: 10px;
+  margin: 40px 0px;
   position: relative;
   overflow: hidden;
 }
@@ -42,7 +42,7 @@ body {
 }
 
 .autor-image img {
-  height: 265px;
+  height: 210px;
   object-fit: cover;
   border-radius: 8px;
   border: 3px solid black;
@@ -56,7 +56,7 @@ body {
 }
 
 .uni-logos {
-  padding: 30px;
+  padding: 10px;
 }
 
 .uni-logos .laboratorios {

@@ -10,6 +10,7 @@ import uch from "../../assets/Logos/logo-uch.png";
 import intilab from "../../assets/Logos/intilab.png";
 import ehealth from "../../assets/Logos/ehealth.png";
 import ciics from "../../assets/Logos/ciics.png";
+import AreaChart from "../AreaChart";
 
 const AutorSlider = () => {
   const [autoresData, setAutoresData] = useState([]);
@@ -179,7 +180,7 @@ const AutorSlider = () => {
             </div>
             <div className="row mt-3">
               <div className="col">
-                {/* Aquí puedes insertar tus gráficos */}
+                <AreaChart authorId={`AUTHOR_ID:${autor.autorId}`} />
               </div>
             </div>
           </div>
