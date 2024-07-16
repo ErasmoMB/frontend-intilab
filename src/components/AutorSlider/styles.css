@@ -1,74 +1,180 @@
-.slider {
-  display: flex;
-  overflow: hidden;
-  width: 100%;
-  height: 100vh; /* Reducido para mejor visualización */
-  position: relative;
+html {
+  font-size: 62.5%;
 }
 
-.slider-content {
-  flex: 0 0 auto;
-  width: 100%;
-  max-width: 100%;
-  padding: 0 20px;
-  box-sizing: border-box;
-  transition: transform 0.8s ease-in-out; /* Animación de desplazamiento */
-}
-
-.slider-content img {
-  display: block;
-  margin: 0 auto;
-  max-width: 100%;
-  height: auto;
-  border-radius: 8px; /* Añadido para bordes redondeados */
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Sombra ligera */
-}
-
-.slider-content h2 {
-  margin-top: 10px;
-  font-size: 24px;
-  font-weight: bold;
-  text-align: center;
-  color: #333; /* Color de texto principal */
-}
-
-.slider-content p {
-  text-align: center;
-  margin-bottom: 10px;
-  color: #666; /* Color de texto secundario */
-}
-
-/* Flechas de navegación */
-.arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 24px;
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 1rem;
+  line-height: 1.5;
   color: #333;
-  cursor: pointer;
-  user-select: none;
+  background-color: #fff;
 }
 
-.left-arrow {
-  left: 10px;
+.author-banner {
+  /* Ocupa el 100% del alto de la pantalla */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.right-arrow {
-  right: 10px;
+.slider {
+  margin: 10px;
+  position: relative;
+  overflow: hidden;
 }
 
-/* Animación de entrada */
-@keyframes slideIn {
+.row-slider {
+  display: flex;
+  align-items: center;
+}
+
+.autor-img {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.autor-image img {
+  height: 265px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 3px solid black;
+}
+
+.datos-autor {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.uni-logos {
+  padding: 30px;
+}
+
+.uni-logos .laboratorios {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+}
+
+.uni-logos .universidad img {
+  width: 100%;
+}
+
+.uni-logos .laboratorios img {
+  width: 30%;
+}
+
+.author-name h1 {
+  font-size: 3rem;
+  font-weight: bolder;
+}
+
+.author-name h5 {
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.author-name p {
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+.detalles-autor {
+  display: flex;
+  text-align: center;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.detalles-autor span {
+  font-size: 1.5rem;
+}
+.detalles-autor .documentos h1 {
+  font-size: 7rem;
+  color: #0f95b0;
+}
+
+.detalles-autor div {
+  padding-right: 20px;
+}
+
+.detalles-autor h1 {
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%; /* Opcional: Ancho completo del contenedor padre */
+  /*   background-color: #f0f0f0;  */
+  /* Color de fondo opcional */
+  padding: 10px; /* Espacio interior opcional */
+}
+
+@keyframes slideInLeft {
   from {
     transform: translateX(100%);
+    opacity: 0;
   }
   to {
     transform: translateX(0);
+    opacity: 1;
   }
 }
 
-@media (max-width: 768px) {
-  .slider {
-    height: 100vh; /* Ajustar altura para pantallas más pequeñas */
+@keyframes slideOutLeft {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.slide-left {
+  animation: slideInLeft 1s forwards;
+}
+
+.slide-right {
+  animation: slideInRight 1s forwards;
+}
+
+@media (max-width: 800px) {
+  .autor-image {
+    display: flex;
+    justify-content: center;
   }
 }
