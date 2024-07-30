@@ -1,20 +1,24 @@
-// Slider.js
 import React from "react";
-import AutorSlide from "../AutorSlide";
+import AuthorDetails from "../AuthorDetails";
+import ChartContainer from "../ChartContainer";
 
-function Slider({ autores, currentIndex, citacionesTotales }) {
+const AutorSlide = ({ autor }) => {
+  console.log("Datos del autor:", autor);
   return (
-    <div className="slider">
-      {autores.map((autor, index) => (
-        <AutorSlide
-          key={index}
-          autor={autor}
-          totalCitas={citacionesTotales[index]}
-          isVisible={index === currentIndex}
-        />
-      ))}
+    <div className="swiper-slide">
+      <div className="slide-content">
+        <div className="autor-image">
+          <img
+            src={autor.rutaImagen}
+            alt={`Imagen de ${autor.nombreCompleto}`}
+            className="img-fluid autor-img"
+          />
+        </div>
+        <AuthorDetails autor={autor} />
+        <ChartContainer authorId={`AUTHOR_ID:${autor.autorId}`} />
+      </div>
     </div>
   );
-}
+};
 
-export default Slider;
+export default AutorSlide;

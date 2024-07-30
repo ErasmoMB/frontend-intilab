@@ -15,6 +15,7 @@ const obtenerDatosBasicosAutores = async () => {
 const obtenerAutores = async () => {
   try {
     const response = await axios.get(`${baseUrl}/autores`);
+    console.log("Número de autores obtenidos:", response.data.autores.length);
     return response.data.autores;
   } catch (error) {
     console.error("Error al obtener datos de autores:", error);

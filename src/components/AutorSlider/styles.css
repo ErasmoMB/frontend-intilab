@@ -1,180 +1,182 @@
-html {
-  font-size: 62.5%;
+/* Estilos generales */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  box-sizing: border-box;
 }
 
 body {
+  font-family: "Arial", sans-serif;
+  background-color: #f5f5f5;
+  color: #333;
   margin: 0;
   padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  font-size: 1rem;
-  line-height: 1.5;
-  color: #333;
-  background-color: #fff;
+  box-sizing: border-box;
 }
-
-.author-banner {
-  /* Ocupa el 100% del alto de la pantalla */
+/* Contenedor principal para ocupar toda la altura */
+.main-container {
+  min-height: 100vh; /* Asegura que el contenedor ocupe al menos el 100% de la altura de la ventana */
+  display: flex;
+  flex-direction: column; /* Aplica el diseño de columna */
+}
+/* Estilo del contenido principal */
+.content {
+  flex: 1; /* Hace que el contenido ocupe el espacio disponible */
+}
+/* Slider */
+.swiper-container {
+  width: 100%;
+  height: 90vh;
+  margin: 10px 0;
+  background-color: #f5f5f5; /* Color de fondo temporal */
+  background-image: url("../../assets/fondo.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.swiper-wrapper {
+  padding: 28px;
+}
+.swiper-slide {
+  /*   border: 1px solid black; */
   display: flex;
   justify-content: center;
   align-items: center;
+  text-align: center;
+  width: 80%;
+  height: auto;
+  margin: 0 auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 1.3);
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.9);
+  transition: transform 0.3s ease-in-out;
+  height: 600px;
 }
 
-.slider {
-  margin: 40px 0px;
-  position: relative;
-  overflow: hidden;
+.swiper-slide-active {
+  transform: scale(1.05);
 }
 
-.row-slider {
-  display: flex;
-  align-items: center;
+.slide-content {
+  padding: 20px;
+}
+
+.autor-image {
+  margin-bottom: 20px;
 }
 
 .autor-img {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 12px;
-}
-
-.autor-image img {
-  height: 210px;
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
   object-fit: cover;
-  border-radius: 8px;
-  border: 3px solid black;
+  border: 2px solid #ddd;
 }
 
-.datos-autor {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.author-details {
+  text-align: left;
 }
 
-.uni-logos {
-  padding: 10px;
-}
-
-.uni-logos .laboratorios {
-  margin-top: 10px;
-  display: flex;
-  justify-content: center;
-}
-
-.uni-logos .universidad img {
-  width: 100%;
-}
-
-.uni-logos .laboratorios img {
-  width: 30%;
+.author-name {
+  margin-bottom: 10px;
 }
 
 .author-name h1 {
-  font-size: 3rem;
-  font-weight: bolder;
-}
-
-.author-name h5 {
-  font-size: 1rem;
-  font-weight: bold;
-}
-
-.author-name p {
-  font-size: 0.9rem;
+  margin: 0;
+  font-size: 1.2rem;
+  color: #333;
   font-weight: bold;
 }
 
 .detalles-autor {
   display: flex;
   text-align: center;
-  justify-content: space-evenly;
+  justify-content: space-around;
   align-items: center;
-}
-.detalles-autor span {
-  font-size: 1.5rem;
-}
-.detalles-autor .documentos h1 {
-  font-size: 7rem;
-  color: #0f95b0;
 }
 
 .detalles-autor div {
-  padding-right: 20px;
+  text-align: center;
 }
-
-.detalles-autor h1 {
-  font-size: 3rem;
+.detalles-autor .citas {
+  font-size: 12px;
+}
+.detalles-autor .citas h1 {
+  font-size: 12px;
+}
+.detalles-autor .documentos {
+  font-size: 1.25rem;
+  color: #007bff;
   font-weight: bold;
 }
 
+.detalles-autor p {
+  margin: 0;
+  color: #777;
+}
+
+.chart-container {
+  width: 100%;
+  height: 200px;
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+/* Footer */
 .footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%; /* Opcional: Ancho completo del contenedor padre */
-  /*   background-color: #f0f0f0;  */
-  /* Color de fondo opcional */
-  padding: 10px; /* Espacio interior opcional */
+  background: #ffffff;
+  padding: 18px 0;
+  margin-top: 20px;
+  height: 150px;
+  position: relative;
+  top: -107px;
 }
 
-@keyframes slideInLeft {
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
+.footer .container {
+  width: 100%;
+  margin: 0 auto;
+}
+.footer .logo-uch {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+.footer .logo-uch img {
+  width: 30%;
+}
+.footer .logo-uch div {
+  display: flex;
+  justify-content: center;
+}
+.footer .logo-laboratorio {
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  height: 40px;
+}
+.footer .logo-laboratorio img {
+  max-width: 50%;
+}
+.footer .logo-laboratorio div {
+  display: flex;
+  justify-content: center;
+}
+@media (max-width: 425px) {
+  .footer .logo-uch img {
+    width: 100%;
   }
 }
-
-@keyframes slideOutLeft {
-  from {
-    transform: translateX(0);
-    opacity: 1;
-  }
-  to {
-    transform: translateX(-100%);
-    opacity: 0;
-  }
+/* Contenedor de los grados académicos */
+.academic-degrees {
+  line-height: 1.5; /* Ajusta la altura de línea para reducir el espaciado */
 }
 
-@keyframes slideOutRight {
-  from {
-    transform: translateX(0);
-    opacity: 1;
-  }
-  to {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-}
-
-@keyframes slideOutRight {
-  from {
-    transform: translateX(0);
-    opacity: 1;
-  }
-  to {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-}
-
-.slide-left {
-  animation: slideInLeft 1s forwards;
-}
-
-.slide-right {
-  animation: slideInRight 1s forwards;
-}
-
-@media (max-width: 800px) {
-  .autor-image {
-    display: flex;
-    justify-content: center;
-  }
+/* Estilo para los grados académicos */
+.academic-degrees h5 {
+  margin: 0; /* Elimina el margen por defecto para reducir el espaciado entre los elementos */
+  font-size: 0.5rem; /* Ajusta el tamaño de fuente según sea necesario */
+  color: #555; /* Ajusta el color si es necesario */
 }
