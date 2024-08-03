@@ -20,9 +20,13 @@ const useAutores = () => {
             obtenerDocumentos(),
           ]);
 
+        console.log("Datos básicos de autores:", datosResponse);
+        console.log("Autores:", autoresResponse);
+        console.log("Documentos:", documentosResponse);
+
         const autoresData = datosResponse || [];
         const autores = autoresResponse || [];
-        const documentos = documentosResponse || {};
+        const documentos = documentosResponse.documentos || {};
 
         const autoresConDatosCompletos = autores.map((author) => {
           const autorId = author["dc:identifier"]?.split(":")[1];
@@ -33,11 +37,21 @@ const useAutores = () => {
           let totalDocumentos = author["document-count"];
 
           if (documentos[autorId]) {
-            totalCitas = documentos[autorId].reduce(
-              (sum, documento) =>
-                sum + parseInt(documento["citedby-count"]) || 0,
-              0
+            console.log(
+              `Documentos del autor ${autorId}:`,
+              documentos[autorId]
             );
+            totalCitas = documentos[autorId].reduce((sum, documento) => {
+              const citas = parseInt(documento["citedby-count"]) || 0;
+              console.log("Documento:", documento);
+              console.log(
+                "Citas del documento:",
+                documento["citedby-count"],
+                "convertidas a",
+                citas
+              );
+              return sum + citas;
+            }, 0);
           }
 
           return {
@@ -55,6 +69,8 @@ const useAutores = () => {
             subjectArea: author["subject-area"],
           };
         });
+
+        console.log("Autores con datos completos:", autoresConDatosCompletos);
 
         setAutoresData(autoresConDatosCompletos);
         setLoading(false);
