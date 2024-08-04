@@ -27,7 +27,7 @@ const ChartContainer = ({ autor }) => {
           subtext: "",
           left: "center",
           textStyle: {
-            fontSize: 14, // Tamaño de fuente del título
+            fontSize: 20, // Tamaño de fuente del título
           },
           subtextStyle: {
             fontSize: 12, // Tamaño de fuente del subtítulo
@@ -40,8 +40,8 @@ const ChartContainer = ({ autor }) => {
           },
         },
         legend: {
-          orient: "vertical",
-          left: "left",
+          orient: "horizontal", // Orientación horizontal de la leyenda
+          top: "bottom", // Posición de la leyenda en la parte inferior
           textStyle: {
             fontSize: 12, // Tamaño de fuente de la leyenda
           },
@@ -50,7 +50,19 @@ const ChartContainer = ({ autor }) => {
           {
             name: "Área Temática",
             type: "pie",
-            radius: "50%",
+            radius: ["40%", "70%"], // Ajusta el radio interno y externo
+            avoidLabelOverlap: false,
+            label: {
+              show: true,
+              position: "outside",
+              fontSize: 12, // Tamaño de fuente de las etiquetas de los segmentos
+            },
+            labelLine: {
+              show: true,
+              length: 10, // Longitud de las líneas de etiquetas
+              length2: 20, // Longitud de la segunda parte de las líneas de etiquetas
+              smooth: 0.2, // Suavizar las líneas
+            },
             data: subjectAreaData,
             emphasis: {
               itemStyle: {
@@ -59,18 +71,29 @@ const ChartContainer = ({ autor }) => {
                 shadowColor: "rgba(0, 0, 0, 0.5)",
               },
             },
-            label: {
-              fontSize: 12, // Tamaño de fuente de las etiquetas de los segmentos
-            },
-            labelLine: {
-              fontSize: 12, // Tamaño de fuente de las líneas de etiquetas
-            },
           },
         ],
       };
       chartInstanceRef.current.setOption(option);
 
-      // Redimensionar el gráfico automáticamente al cambiar el tamaño de la ventana
+      // Adjust styles for the canvas element
+      const canvas = chartRef.current.querySelector("canvas");
+      if (canvas) {
+        Object.assign(canvas.style, {
+          position: "relative", // Cambiado de "absolute" a "relative"
+          left: "0px",
+          top: "0px",
+          width: "70%", // Cambiado el ancho a 70%
+          height: "200px", // Cambiada la altura a 200px
+          userSelect: "none",
+          WebkitTapHighlightColor: "rgba(0, 0, 0, 0)", // Cambiado a "-webkit-tap-highlight-color"
+          padding: "0px",
+          margin: "0px",
+          borderWidth: "0px", // Cambiado a "border-width"
+        });
+      }
+
+      // Handle resizing of the chart
       const resizeChart = () => {
         chartInstanceRef.current.resize();
       };
@@ -90,8 +113,8 @@ const ChartContainer = ({ autor }) => {
       ref={chartRef}
       style={{
         width: "100%",
-        height: "200px",
-        marginTop: "20px",
+        height: "300px", // Aumentar la altura del contenedor
+        /*         marginTop: "20px", */
       }}
     ></div>
   );

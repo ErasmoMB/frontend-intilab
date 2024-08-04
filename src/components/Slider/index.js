@@ -15,7 +15,9 @@ const AutorSlide = ({ autor }) => {
           />
         </div>
         <AuthorDetails autor={autor} />
-        <ChartContainer autor={autor} />
+        <div className="chart-container">
+          <ChartContainer autor={autor} />
+        </div>
       </div>
     </div>
   );

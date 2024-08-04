@@ -19,7 +19,7 @@ const AutorSlider = () => {
         spaceBetween: 30,
         loop: true,
         autoplay: {
-          delay: 5000,
+          delay: 20000,
           disableOnInteraction: false,
         },
         pagination: {
@@ -40,7 +40,7 @@ const AutorSlider = () => {
   }, [autoresData]);
 
   if (loading) {
-    return <div>Cargando autores...</div>;
+    return <div>Cargando investigadores...</div>;
   }
 
   if (error) {
@@ -48,20 +48,23 @@ const AutorSlider = () => {
   }
 
   return (
-    <div className="main-container">
-      <div className="content">
-        <section className="swiper-container">
-          <div className="swiper-wrapper">
-            {autoresData.map((autor) => (
-              <AutorSlide key={autor.autorId} autor={autor} />
-            ))}
-          </div>
-          <div className="swiper-pagination"></div>
-        </section>
+    <div className="slider">
+      <div className="main-container">
+        <div className="content">
+          <section className="swiper-container">
+            <div className="swiper-wrapper">
+              {autoresData.map((autor) => (
+                <AutorSlide key={autor.autorId} autor={autor} />
+              ))}
+            </div>
+            <div className="swiper-pagination"></div>
+          </section>
+        </div>
       </div>
       <Footer />
     </div>
   );
 };
-
+{
+}
 export default AutorSlider;

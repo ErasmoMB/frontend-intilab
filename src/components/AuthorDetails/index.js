@@ -17,7 +17,7 @@ const AuthorDetails = ({ autor }) => {
             <div className="citas">
               <h1>
                 N<span>ro </span>
-                {autor.totalCitas}
+                <span className="numero-citas">{autor.totalCitas}</span>
               </h1>
               <p>Citaciones</p>
             </div>

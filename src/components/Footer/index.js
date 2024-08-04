@@ -9,15 +9,21 @@ const Footer = () => {
     <footer className="footer">
       <div className="container">
         <div className="row">
-          <div className="col-12 col-md-3 col-lg-4 logo-uch">
-            <img
+          {/*           <div className="col-12 col-md-3 col-lg-4 logo-uch">
+                        <img
               src={uch}
               alt="Logo de la Universidad de Ciencias y Humanidades"
             />
-          </div>
+          </div> */}
         </div>
         <div className="row">
           <div className="logo-laboratorio">
+            <div className="col">
+              <img
+                src={uch}
+                alt="Logo de la Universidad de Ciencias y Humanidades"
+              />
+            </div>
             <div className="col">
               <img src={intilab} alt="Logo de INTILAB" />
             </div>
