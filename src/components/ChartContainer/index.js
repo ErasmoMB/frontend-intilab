@@ -1,122 +1,56 @@
-import React, { useEffect, useRef, useMemo } from "react";
-import * as echarts from "echarts";
+import React, { useMemo } from "react";
+import Highcharts from "highcharts";
+import HighchartsReact from "highcharts-react-official";
 
 const ChartContainer = ({ autor }) => {
-  const chartRef = useRef(null);
-  const chartInstanceRef = useRef(null);
-
   const subjectAreaData = useMemo(() => {
     if (!autor || !autor.subjectArea) return [];
     return Array.isArray(autor.subjectArea)
       ? autor.subjectArea.map((area) => ({
-          value: parseInt(area["@frequency"]) || 0,
           name: area["$"],
+          y: parseInt(area["@frequency"]) || 0,
         }))
       : [];
   }, [autor]);
 
-  useEffect(() => {
-    if (subjectAreaData.length > 0 && chartRef.current) {
-      if (chartInstanceRef.current) {
-        chartInstanceRef.current.dispose();
-      }
-      chartInstanceRef.current = echarts.init(chartRef.current);
-      const option = {
-        title: {
-          text: "Áreas Temáticas",
-          subtext: "",
-          left: "center",
-          textStyle: {
-            fontSize: 20, // Tamaño de fuente del título
-          },
-          subtextStyle: {
-            fontSize: 12, // Tamaño de fuente del subtítulo
-          },
+  const options = {
+    chart: {
+      type: "pie",
+      height: 200, // Establece la altura del gráfico aquí
+      backgroundColor: "transparent", // Fondo del gráfico transparente
+    },
+    title: {
+      text: "Áreas Temáticas",
+      style: {
+        color: "#000", // Color del texto del título
+      },
+    },
+    tooltip: {
+      pointFormat: "{series.name}: <b>{point.percentage:.1f}%</b>",
+    },
+    plotOptions: {
+      pie: {
+        allowPointSelect: true,
+        cursor: "pointer",
+        dataLabels: {
+          enabled: true,
+          format: "{point.name}: {point.percentage:.1f} %",
         },
-        tooltip: {
-          trigger: "item",
-          textStyle: {
-            fontSize: 12, // Tamaño de fuente del tooltip
-          },
-        },
-        legend: {
-          orient: "horizontal", // Orientación horizontal de la leyenda
-          top: "bottom", // Posición de la leyenda en la parte inferior
-          textStyle: {
-            fontSize: 12, // Tamaño de fuente de la leyenda
-          },
-        },
-        series: [
-          {
-            name: "Área Temática",
-            type: "pie",
-            radius: ["20%", "60%"], // Ajusta el radio interno y externo
-            avoidLabelOverlap: false,
-            label: {
-              show: true,
-              position: "outside",
-              fontSize: 12, // Tamaño de fuente de las etiquetas de los segmentos
-            },
-            labelLine: {
-              show: true,
-              length: 10, // Longitud de las líneas de etiquetas
-              length2: 20, // Longitud de la segunda parte de las líneas de etiquetas
-              smooth: 0.2, // Suavizar las líneas
-            },
-            data: subjectAreaData,
-            emphasis: {
-              itemStyle: {
-                shadowBlur: 10,
-                shadowOffsetX: 0,
-                shadowColor: "rgba(0, 0, 0, 0.5)",
-              },
-            },
-          },
-        ],
-      };
-      chartInstanceRef.current.setOption(option);
-
-      // Adjust styles for the canvas element
-      const canvas = chartRef.current.querySelector("canvas");
-      if (canvas) {
-        Object.assign(canvas.style, {
-          position: "relative", // Cambiado de "absolute" a "relative"
-          left: "0px",
-          top: "0px",
-          width: "100%", // Cambiado el ancho a 70%
-          height: "180px", // Cambiada la altura a 200px
-          userSelect: "none",
-          WebkitTapHighlightColor: "rgba(0, 0, 0, 0)", // Cambiado a "-webkit-tap-highlight-color"
-          padding: "0px",
-          margin: "0px",
-          borderWidth: "0px", // Cambiado a "border-width"
-        });
-      }
-
-      // Handle resizing of the chart
-      const resizeChart = () => {
-        chartInstanceRef.current.resize();
-      };
-      window.addEventListener("resize", resizeChart);
-
-      return () => {
-        window.removeEventListener("resize", resizeChart);
-        if (chartInstanceRef.current) {
-          chartInstanceRef.current.dispose();
-        }
-      };
-    }
-  }, [subjectAreaData]);
+      },
+    },
+    series: [
+      {
+        name: "Porcentaje",
+        colorByPoint: true,
+        data: subjectAreaData,
+      },
+    ],
+  };
 
   return (
-    <div
-      ref={chartRef}
-      style={{
-        width: "100%",
-        height: "180px", // Aumentar la altura del contenedor
-        /*         marginTop: "20px", */
-      }}
-    ></div>
+    <div style={{ width: "100%", height: "180px !important" }}>
+      <HighchartsReact highcharts={Highcharts} options={options} />
+    </div>
   );
 };
 

@@ -17,6 +17,7 @@ const iconMap = {
   magíster: magisterIcon,
   doctor: doctorIcon,
   especialista: especialistaIcon,
+  especialización: especialistaIcon,
   diplomado: diplomadoIcon, // Agrega el ícono para diplomado
 };
 
