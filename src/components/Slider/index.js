@@ -3,7 +3,7 @@ import AuthorDetails from "../AuthorDetails";
 import ChartContainer from "../ChartContainer";
 
 const AutorSlide = ({ autor }) => {
-  console.log("Datos del autor:", autor);
+  /*   console.log("Datos del autor:", autor); */
   return (
     <div className="swiper-slide">
       <div className="slide-content">

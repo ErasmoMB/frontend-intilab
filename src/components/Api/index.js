@@ -24,16 +24,16 @@ const retryRequest = async (apiCall, retries = 3, initialDelay = 1000) => {
 const obtenerAutores = async () => {
   try {
     const response = await retryRequest(() => api.get("/autores"));
-    console.log("Respuesta completa de la API:", response.data);
+    /*  console.log("Respuesta completa de la API:", response.data); */
     if (response.data && Array.isArray(response.data.autores)) {
-      console.log("Número de autores obtenidos:", response.data.autores.length);
+      /*  console.log("Número de autores obtenidos:", response.data.autores.length); */
       return response.data.autores;
     } else {
-      console.error("Los datos de autores no son un array:", response.data);
+      /* console.error("Los datos de autores no son un array:", response.data); */
       throw new Error("Los datos de autores no tienen el formato esperado");
     }
   } catch (error) {
-    console.error("Error al obtener datos de autores:", error);
+    /*  console.error("Error al obtener datos de autores:", error); */
     throw error;
   }
 };
@@ -41,7 +41,7 @@ const obtenerAutores = async () => {
 const obtenerDatosBasicosAutores = async () => {
   try {
     const response = await retryRequest(() => api.get("/datos"));
-    console.log("Datos básicos de autores:", response.data);
+    /* console.log("Datos básicos de autores:", response.data); */
     return response.data;
   } catch (error) {
     console.error("Error al obtener datos básicos de autores:", error);
@@ -52,10 +52,10 @@ const obtenerDatosBasicosAutores = async () => {
 const obtenerDocumentos = async () => {
   try {
     const response = await retryRequest(() => api.get("/documentos"));
-    console.log("Documentos obtenidos:", response.data);
+    /* console.log("Documentos obtenidos:", response.data); */
     return response.data;
   } catch (error) {
-    console.error("Error al obtener documentos:", error);
+    /* console.error("Error al obtener documentos:", error); */
     throw error;
   }
 };

@@ -19,7 +19,7 @@ const AutorSlider = () => {
         spaceBetween: 30,
         loop: true,
         autoplay: {
-          delay: 20000,
+          delay: 200000,
           disableOnInteraction: false,
         },
         pagination: {
@@ -65,6 +65,5 @@ const AutorSlider = () => {
     </div>
   );
 };
-{
-}
+
 export default AutorSlider;
