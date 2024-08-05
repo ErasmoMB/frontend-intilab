@@ -50,7 +50,7 @@ const ChartContainer = ({ autor }) => {
           {
             name: "Área Temática",
             type: "pie",
-            radius: ["40%", "70%"], // Ajusta el radio interno y externo
+            radius: ["20%", "60%"], // Ajusta el radio interno y externo
             avoidLabelOverlap: false,
             label: {
               show: true,
@@ -83,8 +83,8 @@ const ChartContainer = ({ autor }) => {
           position: "relative", // Cambiado de "absolute" a "relative"
           left: "0px",
           top: "0px",
-          width: "70%", // Cambiado el ancho a 70%
-          height: "200px", // Cambiada la altura a 200px
+          width: "100%", // Cambiado el ancho a 70%
+          height: "180px", // Cambiada la altura a 200px
           userSelect: "none",
           WebkitTapHighlightColor: "rgba(0, 0, 0, 0)", // Cambiado a "-webkit-tap-highlight-color"
           padding: "0px",
@@ -113,7 +113,7 @@ const ChartContainer = ({ autor }) => {
       ref={chartRef}
       style={{
         width: "100%",
-        height: "300px", // Aumentar la altura del contenedor
+        height: "180px", // Aumentar la altura del contenedor
         /*         marginTop: "20px", */
       }}
     ></div>

@@ -1,0 +1,27 @@
+/* Estilos generales para los grados académicos */
+.academic-degrees {
+  display: flex;
+  flex-direction: column;
+}
+
+.academic-degrees h5 {
+  padding: 10px;
+  border-radius: 10px; /* Bordes redondeados */
+  margin: 5px 0;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.8); /* Fondo blanco semitransparente */
+  backdrop-filter: blur(5px); /* Efecto de desenfoque en el fondo */
+  font-family: "Arial", sans-serif; /* Cambia la fuente a una sans-serif moderna */
+  font-weight: bold; /* Estilo de texto en negrita */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra para el efecto elevado */
+}
+
+/* Efecto de brillo en el ícono */
+.academic-degrees img {
+  transition: transform 0.3s ease, filter 0.3s ease; /* Transición suave para el ícono */
+  filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.7)); /* Efecto de brillo */
+}
+
+.academic-degrees h5:hover img {
+  transform: rotate(10deg) scale(1.1); /* Efecto de rotación y pulsación al hacer hover */
+}
