@@ -1,25 +1,39 @@
-// components/Sidebar.js
 import React from "react";
-import { Link } from "react-router-dom";
 
-function Sidebar() {
+const Sidebar = ({ setChartType }) => {
   return (
     <div id="sidebar">
-      <Link to="/dashboard" id="bar-chart-sidebar">
+      <a
+        href="#"
+        id="bar-chart-sidebar"
+        onClick={() => setChartType("bar-chart")}
+      >
         <i className="fas fa-chart-bar"></i> Número de Documentos por Autor
-      </Link>
-      <Link to="/distribucion" id="pie-chart-sidebar">
+      </a>
+      <a
+        href="#"
+        id="pie-chart-sidebar"
+        onClick={() => setChartType("pie-chart")}
+      >
         <i className="fas fa-chart-pie"></i> Distribución de Áreas de
         Especialización
-      </Link>
-      <Link to="/citas" id="citations-sidebar">
+      </a>
+      <a
+        href="#"
+        id="heatmap-sidebar"
+        onClick={() => setChartType("citations-chart")}
+      >
         <i className="fas fa-th"></i> Número de Citas por Autor
-      </Link>
-      <Link to="/ver-todo" id="view-all-sidebar">
+      </a>
+      <a
+        href="#"
+        id="view-all-sidebar"
+        onClick={() => setChartType("all-charts")}
+      >
         <i className="fas fa-eye"></i> Ver Todo
-      </Link>
+      </a>
     </div>
   );
-}
+};
 
 export default Sidebar;

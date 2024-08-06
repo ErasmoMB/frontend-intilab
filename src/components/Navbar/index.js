@@ -1,13 +1,11 @@
-// components/Navbar.js
 import React from "react";
-import { Link } from "react-router-dom";
 
-function Navbar() {
+const Navbar = ({ setChartType }) => {
   return (
     <nav className="navbar navbar-expand-lg navbar-custom">
-      <Link className="navbar-brand" to="/">
+      <a className="navbar-brand" href="#">
         Universidad de Ciencias y Humanidades
-      </Link>
+      </a>
       <button
         className="navbar-toggler"
         type="button"
@@ -22,31 +20,51 @@ function Navbar() {
       <div className="collapse navbar-collapse" id="navbarNav">
         <ul className="navbar-nav">
           <li className="nav-item">
-            <Link className="nav-link" to="/bar-chart">
+            <a
+              className="nav-link"
+              href="#"
+              id="show-bar-chart"
+              onClick={() => setChartType("bar-chart")}
+            >
               <i className="fas fa-chart-bar"></i> Número de Documentos por
               Autor
-            </Link>
+            </a>
           </li>
           <li className="nav-item">
-            <Link className="nav-link" to="/pie-chart">
+            <a
+              className="nav-link"
+              href="#"
+              id="show-pie-chart"
+              onClick={() => setChartType("pie-chart")}
+            >
               <i className="fas fa-chart-pie"></i> Distribución de Áreas de
               Especialización
-            </Link>
+            </a>
           </li>
           <li className="nav-item">
-            <Link className="nav-link" to="/citations">
+            <a
+              className="nav-link"
+              href="#"
+              id="show-citations-chart"
+              onClick={() => setChartType("citations-chart")}
+            >
               <i className="fas fa-th"></i> Número de Citas por Autor
-            </Link>
+            </a>
           </li>
           <li className="nav-item">
-            <Link className="nav-link" to="/ver-todo">
+            <a
+              className="nav-link"
+              href="#"
+              id="show-all-charts"
+              onClick={() => setChartType("all-charts")}
+            >
               <i className="fas fa-eye"></i> Ver Todo
-            </Link>
+            </a>
           </li>
         </ul>
       </div>
     </nav>
   );
-}
+};
 
 export default Navbar;

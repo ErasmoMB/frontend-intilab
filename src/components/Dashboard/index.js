@@ -1,18 +1,20 @@
-import React from "react";
-import Navbar from "../Navbar"; // Asegúrate de que la ruta sea correcta
-import Sidebar from "../Sidebar"; // Asegúrate de que la ruta sea correcta
-import Totals from "../Totals"; // Asegúrate de que la ruta sea correcta
-import Charts from "../Charts"; // Asegúrate de que la ruta sea correcta
+import React, { useState } from "react";
+import Navbar from "../Navbar";
+import Sidebar from "../Sidebar";
+import Totals from "../Totals";
+import Charts from "../Charts";
 import "./styles.css";
 
 function Dashboard() {
+  const [chartType, setChartType] = useState("all-charts");
+
   return (
     <div>
-      <Navbar />
-      <Sidebar />
+      <Navbar setChartType={setChartType} />
+      <Sidebar setChartType={setChartType} />
       <div id="main">
         <Totals />
-        <Charts />
+        <Charts chartType={chartType} />
       </div>
     </div>
   );
