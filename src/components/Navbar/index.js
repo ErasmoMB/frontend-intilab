@@ -3,7 +3,7 @@ import React from "react";
 const Navbar = ({ setChartType }) => {
   return (
     <nav className="navbar navbar-expand-lg navbar-custom">
-      <a className="navbar-brand" href="#">
+      <a className="navbar-brand" href="/">
         Universidad de Ciencias y Humanidades
       </a>
       <button
