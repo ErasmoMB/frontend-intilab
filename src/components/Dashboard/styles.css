@@ -47,6 +47,7 @@ body {
 }
 .navbar-custom .navbar-toggler {
   border: none;
+  color: white;
 }
 #main {
   padding: 20px;
