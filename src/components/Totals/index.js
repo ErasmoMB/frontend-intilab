@@ -3,12 +3,8 @@ import React, { useEffect, useState } from "react";
 import { obtenerTotalDocumentos, obtenerTotalAutores } from "../Api";
 
 function Totals() {
-  const [totalDocumentos, setTotalDocumentos] = useState(
-    "Cargando total de documentos..."
-  );
-  const [totalAutores, setTotalAutores] = useState(
-    "Cargando total de autores..."
-  );
+  const [totalDocumentos, setTotalDocumentos] = useState("Cargando...");
+  const [totalAutores, setTotalAutores] = useState("Cargando...");
 
   useEffect(() => {
     const fetchTotals = async () => {
