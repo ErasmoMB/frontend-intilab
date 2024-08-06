@@ -14,7 +14,6 @@ const retryRequest = async (apiCall, retries = 3, initialDelay = 1000) => {
       return await apiCall();
     } catch (error) {
       if (i === retries - 1) throw error;
-      // eslint-disable-next-line no-loop-func
       await new Promise((resolve) => setTimeout(resolve, currentDelay));
       currentDelay *= 2; // Backoff exponencial
     }
@@ -23,17 +22,9 @@ const retryRequest = async (apiCall, retries = 3, initialDelay = 1000) => {
 
 const obtenerAutores = async () => {
   try {
-    const response = await retryRequest(() => api.get("/autores"));
-    /*  console.log("Respuesta completa de la API:", response.data); */
-    if (response.data && Array.isArray(response.data.autores)) {
-      /*  console.log("Número de autores obtenidos:", response.data.autores.length); */
-      return response.data.autores;
-    } else {
-      /* console.error("Los datos de autores no son un array:", response.data); */
-      throw new Error("Los datos de autores no tienen el formato esperado");
-    }
+    const response = await retryRequest(() => api.get("/autores-uch"));
+    return response.data.autores;
   } catch (error) {
-    /*  console.error("Error al obtener datos de autores:", error); */
     throw error;
   }
 };
@@ -41,10 +32,8 @@ const obtenerAutores = async () => {
 const obtenerDatosBasicosAutores = async () => {
   try {
     const response = await retryRequest(() => api.get("/datos"));
-    /* console.log("Datos básicos de autores:", response.data); */
     return response.data;
   } catch (error) {
-    console.error("Error al obtener datos básicos de autores:", error);
     throw error;
   }
 };
@@ -52,12 +41,38 @@ const obtenerDatosBasicosAutores = async () => {
 const obtenerDocumentos = async () => {
   try {
     const response = await retryRequest(() => api.get("/documentos"));
-    /* console.log("Documentos obtenidos:", response.data); */
     return response.data;
   } catch (error) {
-    /* console.error("Error al obtener documentos:", error); */
     throw error;
   }
 };
 
-export { obtenerAutores, obtenerDatosBasicosAutores, obtenerDocumentos };
+// Obtener total de documentos
+const obtenerTotalDocumentos = async () => {
+  try {
+    const response = await retryRequest(() => api.get("/uch"));
+    return response.data.informacion_afiliaciones?.["search-results"]?.[
+      "opensearch:totalResults"
+    ];
+  } catch (error) {
+    throw error;
+  }
+};
+
+// Obtener total de autores
+const obtenerTotalAutores = async () => {
+  try {
+    const response = await retryRequest(() => api.get("/autores-uch"));
+    return response.data.total_autores_uch; // Asegúrate de que esta propiedad exista en la respuesta
+  } catch (error) {
+    throw error;
+  }
+};
+
+export {
+  obtenerAutores,
+  obtenerDatosBasicosAutores,
+  obtenerDocumentos,
+  obtenerTotalDocumentos,
+  obtenerTotalAutores,
+};

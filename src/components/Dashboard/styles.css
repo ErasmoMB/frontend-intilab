@@ -1,0 +1,130 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+#totales {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px 0;
+}
+#totales div {
+  text-align: center;
+}
+#totales div span {
+  display: block;
+  font-size: 24px;
+  font-weight: bold; /* Resaltar los totales */
+  color: #333;
+}
+#totales div p {
+  margin: 0;
+  font-size: 16px;
+  color: #666;
+}
+
+.navbar-custom {
+  background-color: #343a40;
+  z-index: 1000;
+}
+.navbar-custom .navbar-brand {
+  color: #fff;
+}
+.navbar-custom .navbar-brand:hover {
+  color: #ddd;
+}
+.navbar-custom .navbar-nav .nav-link {
+  color: #fff;
+}
+.navbar-custom .navbar-nav .nav-link:hover {
+  background-color: #495057;
+}
+.navbar-custom .navbar-toggler {
+  border: none;
+}
+#main {
+  padding: 20px;
+  transition: margin-left 0.3s;
+}
+.chart-container {
+  position: relative;
+  height: 400px; /* Altura del contenedor de gráficos */
+  width: 100%;
+}
+#charts {
+  height: 100%; /* Asegura que el contenedor de gráficos ocupe todo el espacio */
+}
+@media (max-width: 600px) {
+  #sidebar {
+    display: none;
+  }
+  #sidebar.active {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #343a40;
+    z-index: 1000;
+    overflow-y: auto;
+  }
+  #toggle-btn {
+    display: block;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1001;
+    color: #fff;
+    background: #343a40;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+  }
+  .navbar-collapse {
+    display: block;
+  }
+}
+@media (min-width: 601px) {
+  #sidebar {
+    width: 250px;
+    background-color: #343a40;
+    color: #fff;
+    position: fixed;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    overflow-x: hidden;
+    transition: 0.3s;
+    padding-top: 90px;
+    z-index: 1;
+    display: block;
+  }
+  #sidebar a {
+    color: #fff;
+    padding: 15px;
+    text-decoration: none;
+    display: block;
+    transition: 0.3s;
+  }
+  #sidebar a:hover {
+    background-color: #495057;
+  }
+  #main {
+    margin-left: 250px;
+  }
+  .navbar-collapse {
+    display: none;
+  }
+  .navbar-toggler {
+    display: none;
+  }
+}
+.dropdown-menu {
+  z-index: 1001;
+}

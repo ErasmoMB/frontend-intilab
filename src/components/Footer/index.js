@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom"; // Importar Link
 import uch from "../../assets/Logos/logo-uch.png";
 import intilab from "../../assets/Logos/intilab.png";
 import ehealth from "../../assets/Logos/ehealth.png";
@@ -19,10 +20,14 @@ const Footer = () => {
         <div className="row">
           <div className="logo-laboratorio">
             <div className="col">
-              <img
-                src={uch}
-                alt="Logo de la Universidad de Ciencias y Humanidades"
-              />
+              <Link to="/dashboard">
+                {" "}
+                {/* Envolver en un Link */}
+                <img
+                  src={uch}
+                  alt="Logo de la Universidad de Ciencias y Humanidades"
+                />
+              </Link>
             </div>
             <div className="col">
               <img src={intilab} alt="Logo de INTILAB" />
