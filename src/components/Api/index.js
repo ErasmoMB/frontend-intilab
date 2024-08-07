@@ -22,7 +22,7 @@ const retryRequest = async (apiCall, retries = 3, initialDelay = 1000) => {
 
 const obtenerAutores = async () => {
   try {
-    const response = await retryRequest(() => api.get("/autores-uch"));
+    const response = await retryRequest(() => api.get("/autores"));
     return response.data.autores;
   } catch (error) {
     throw error;
