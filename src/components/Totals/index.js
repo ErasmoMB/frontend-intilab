@@ -10,9 +10,9 @@ function Totals() {
     const fetchTotals = async () => {
       try {
         const documentos = await obtenerTotalDocumentos();
-        const autores = await obtenerTotalAutores();
+        const { total } = await obtenerTotalAutores(); // Desestructuramos para obtener solo el total
         setTotalDocumentos(documentos);
-        setTotalAutores(autores);
+        setTotalAutores(total); // Usamos solo el total de autores
       } catch (error) {
         console.error("Error al obtener totales:", error);
         setTotalDocumentos("Error al cargar documentos");

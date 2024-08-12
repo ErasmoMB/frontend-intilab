@@ -59,11 +59,14 @@ const obtenerTotalDocumentos = async () => {
   }
 };
 
-// Obtener total de autores
+// Obtener total de autores y datos
 const obtenerTotalAutores = async () => {
   try {
     const response = await retryRequest(() => api.get("/autores-uch"));
-    return response.data.total_autores_uch; // Asegúrate de que esta propiedad exista en la respuesta
+    return {
+      total: response.data.total_autores_uch, // Total de autores
+      data: response.data.autores, // Asegúrate de que esta propiedad exista en la respuesta
+    };
   } catch (error) {
     throw error;
   }

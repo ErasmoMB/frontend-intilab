@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { obtenerDocumentos, obtenerAutores } from "../Api";
+import { obtenerDocumentos, obtenerTotalAutores } from "../Api";
 import Highcharts from "highcharts";
 
 function Charts({ chartType }) {
@@ -15,7 +15,7 @@ function Charts({ chartType }) {
       setLoading(true);
       try {
         const documentos = await obtenerDocumentos();
-        const autores = await obtenerAutores();
+        const { data: autores } = await obtenerTotalAutores(); // Usamos obtenerTotalAutores
         setDocumentsData(documentos);
         setAuthorsData(autores);
         createCharts(autores, documentos);
