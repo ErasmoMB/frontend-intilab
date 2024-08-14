@@ -16,9 +16,16 @@ function Charts({ chartType }) {
       try {
         const documentos = await obtenerDocumentos();
         const { data: autores } = await obtenerTotalAutores(); // Usamos obtenerTotalAutores
+        // Filtramos los autores no deseados
+        const autoresFiltrados = autores.filter(
+          (autor) =>
+            !["56902581400", "57200970000", "57201023602"].includes(
+              autor["dc:identifier"]?.split(":")[1]
+            )
+        );
         setDocumentsData(documentos);
-        setAuthorsData(autores);
-        createCharts(autores, documentos);
+        setAuthorsData(autoresFiltrados);
+        createCharts(autoresFiltrados, documentos);
       } catch (error) {
         console.error("Error al obtener datos para gráficos:", error);
       } finally {
