@@ -63,16 +63,17 @@ body {
   padding: 20px;
 }
 
-.autor-image {
-  margin-bottom: 20px;
-}
-
 .autor-img {
+  margin-bottom: 20px;
   border-radius: 50%;
   width: 150px;
   height: 150px;
   object-fit: cover;
   border: 2px solid #ddd;
+}
+
+.autor-img img{
+  width: 20px;
 }
 
 .author-details {
