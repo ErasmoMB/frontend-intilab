@@ -20,12 +20,12 @@ const useAutores = () => {
             obtenerDocumentos(),
           ]);
 
-           console.log("Datos básicos de autores:", datosResponse);
+        console.log("Datos básicos de autores:", datosResponse);
         console.log("Autores:", autoresResponse);
         console.log("Documentos:", documentosResponse);
 
         const autoresData = datosResponse || [];
-        const autores = autoresResponse || [];
+        const autores = autoresResponse.autores || [];
         const documentos = documentosResponse.documentos || {};
 
         const autoresConDatosCompletos = await Promise.all(
