@@ -35,7 +35,6 @@ body {
 }
 .swiper-slide {
   width: 80%;
-  min-width: 500px;
   height: 92vh;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
   text-align: center;
@@ -195,11 +194,12 @@ font-weight: bold;
 }
 
 /* Media query para pantallas pequeñas */
-@media (max-width: 600px) {
+@media (max-width: 496px) {
   .swiper-wrapper{
     margin: 0px;
   }
   .swiper-slide {
+    min-width: 70%;
     width: 94%;
     height: 93vh;
     margin-top: 10px;
