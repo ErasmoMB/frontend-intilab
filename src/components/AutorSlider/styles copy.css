@@ -150,6 +150,17 @@ body {
   margin: 0 auto;
 }
 
+.footer .row {
+}
+
+.footer .logo-uch,
+.footer .logo-laboratorio .col {
+}
+
+.footer .logo-uch img,
+.footer .logo-laboratorio img {
+}
+
 .footer .logo-uch {
   width: 100%;
   display: flex;
