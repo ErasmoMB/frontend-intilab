@@ -1,11 +1,10 @@
-html,
+/* html,
 body {
-  font-family: "Roboto Slab", "Merriweather", "Libre Baskerville", "Lora",
-    "Playfair Display", serif;
+  font-family: 'Roboto Slab','Merriweather', 'Libre Baskerville', 'Lora', 'Playfair Display', serif;
   height: 100%;
   margin: 0;
   padding: 0;
-}
+} */
 
 body {
   font-size: 14px;
@@ -31,17 +30,16 @@ body {
   width: 100%;
   padding: 10% 0 5% 0;
 }
-
 .swiper-wrapper {
   margin: 10px auto;
 }
-
 .swiper-slide {
   width: 80%;
   height: 92vh;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 1.3);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
   text-align: center;
   margin: 0 auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 1.3);
   border-radius: 15px;
   background: rgba(255, 255, 255, 0.9);
   transition: transform 0.3s ease-in-out;
@@ -50,15 +48,15 @@ body {
 .slide-content {
   padding: 5px;
   height: 100%;
+
   position: relative;
 }
-
 .slide-content .chart-container {
   position: absolute;
   bottom: 0;
   left: 0;
 }
-
+/* detalles autor */
 .author-details {
   text-align: left;
 }
@@ -74,7 +72,6 @@ body {
   font-weight: bold;
   text-align: center;
 }
-
 .academic-degrees h5 {
   font-size: 0.6rem;
   padding: 7px;
@@ -111,12 +108,10 @@ body {
   color: #007bff;
   font-weight: bold;
 }
-
 .detalles-autor .documentos h1 {
   font-size: 2rem;
   font-weight: bold;
 }
-
 .detalles-autor p {
   margin: 0;
   color: #777;
@@ -140,6 +135,7 @@ body {
   margin-top: 50px;
 }
 
+/********* footer ********/
 .footer {
   background: #ffffff;
   padding: 18px 0;
@@ -152,6 +148,17 @@ body {
 .footer .container {
   width: 100%;
   margin: 0 auto;
+}
+
+.footer .row {
+}
+
+.footer .logo-uch,
+.footer .logo-laboratorio .col {
+}
+
+.footer .logo-uch img,
+.footer .logo-laboratorio img {
 }
 
 .footer .logo-uch {
@@ -186,68 +193,59 @@ body {
   justify-content: center;
 }
 
-@media (max-width: 760px) {
+/* Media query para pantallas pequeñas */
+@media (max-width: 496px) {
   .swiper-wrapper {
+    margin: 0px;
   }
   .swiper-slide {
+    min-width: 70%;
     width: 94%;
-    height: 800px;
+    height: 93vh;
     margin-top: 10px;
   }
-
   .swiper {
     padding: 10px 0;
   }
-
   .autor-img {
     height: 130px;
     width: 108px;
     margin: 20px 0;
     object-fit: cover;
   }
-
   .author-name h1 {
     font-size: 1.5rem;
     font-weight: bold;
     text-align: center;
   }
-
   .slide-content .autor-image {
     height: 20%;
   }
-
   .slide-content .author-details {
     height: 55%;
     padding: 5px;
   }
-
   .slide-content .chart-container {
     height: 25%;
   }
-
   .author-details h5 {
     font-size: 0.6rem;
   }
-
   .detalles-autor .citas h1 {
     font-size: 1rem;
   }
-
   .detalles-autor .documentos h1 {
     font-size: 2rem;
     font-weight: bold;
   }
-
   .detalles-autor .citas {
     font-size: 1rem;
     font-weight: bold;
   }
-
   .detalles-autor .documentos {
     font-size: 1rem;
     font-weight: bold;
   }
-
   .footer {
     background: #ffffff;
     padding: 18px 0;
@@ -257,7 +255,6 @@ body {
     justify-content: center;
     padding: 0px 30px;
   }
-
   .footer .logo-laboratorio img {
     max-width: 100%;
     height: 20px;
