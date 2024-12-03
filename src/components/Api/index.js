@@ -5,7 +5,7 @@ const baseUrl = "https://backend-intilab.onrender.com";
 
 const api = axios.create({
   baseURL: baseUrl,
-  timeout: 30000, // 30 segundos
+  timeout: 60000, // 30 segundos
 });
 
 const retryRequest = async (apiCall, retries = 3, initialDelay = 1000) => {

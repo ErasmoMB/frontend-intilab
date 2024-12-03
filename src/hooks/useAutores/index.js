@@ -10,32 +10,6 @@ const useAutores = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Datos manuales de citas y documentos
-  const manualData = {
-    "36659719000": { totalCitas: 698, totalDocumentos: 180 },
-    "57207915215": { totalCitas: 514, totalDocumentos: 177 },
-    "57016156500": { totalCitas: 802, totalDocumentos: 125 },
-    "57209658640": { totalCitas: 51, totalDocumentos: 91 },
-    "56741286500": { totalCitas: 329, totalDocumentos: 91 },
-    "57210377414": { totalCitas: 198, totalDocumentos: 62 },
-    "58562875900": { totalCitas: 18, totalDocumentos: 58 },
-    "57215218631": { totalCitas: 465, totalDocumentos: 52 },
-    "57205596738": { totalCitas: 251, totalDocumentos: 52 },
-    "57205765369": { totalCitas: 15, totalDocumentos: 30 },
-    "57225097710": { totalCitas: 29, totalDocumentos: 24 },
-    "57215928001": { totalCitas: 75, totalDocumentos: 23 },
-    "58127854500": { totalCitas: 11, totalDocumentos: 22 },
-    "57204841219": { totalCitas: 29, totalDocumentos: 16 },
-    "57223372908": { totalCitas: 3, totalDocumentos: 5 },
-    "57211666738": { totalCitas: 12, totalDocumentos: 10 },
-    "58077315000": { totalCitas: 8, totalDocumentos: 8 },
-    "57930813500": { totalCitas: 1, totalDocumentos: 6 },
-    "57364197600": { totalCitas: 2, totalDocumentos: 6 },
-    "15750919900": { totalCitas: 87, totalDocumentos: 3 },
-    "59164833900": { totalCitas: 0, totalDocumentos: 2 },
-    "57203357446": { totalCitas: 17, totalDocumentos: 25 },
-  };
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -60,18 +34,27 @@ const useAutores = () => {
             let autorData = autoresData.find(
               (item) => item.autor_id === autorId
             );
-
-            // Asignar manualmente los totales sin sumar
-            let totalCitas = manualData[autorId]?.totalCitas || 0;
-            let totalDocumentos = manualData[autorId]?.totalDocumentos || 0;
-
+            let totalCitas = 0;
+            let totalDocumentos = author["document-count"];
+        
+            // Verifica si documentos[autorId] es un array y no está vacío
+            if (Array.isArray(documentos[autorId]) && documentos[autorId].length > 0) {
+              totalCitas = documentos[autorId].reduce((sum, documento) => {
+                const citas = parseInt(documento["citedby-count"]) || 0;
+                return sum + citas;
+              }, 0);
+            } else {
+              console.error("No se encontraron documentos para el autor:", autorId);
+            }
+        
             // Verificar si el autor es el específico con ID "59164833900"
             if (autorId === "59164833900") {
+              // Obtener datos adicionales para este autor usando el ID "58886913200"
               autorData = autoresData.find(
                 (item) => item.autor_id === "58886913200"
               );
             }
-
+        
             return {
               autorId: autorId || "",
               nombreCompleto: `${
