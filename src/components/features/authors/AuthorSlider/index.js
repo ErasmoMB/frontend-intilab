@@ -16,24 +16,34 @@ const AutorSlider = () => {
 
   const slidesData = useMemo(() => {
     if (!autoresData || autoresData.length === 0) return [];
-    const minSlides = 12;
+    const minSlides = 60;
     const target = Math.max(autoresData.length, minSlides);
     return Array.from({ length: target }, (_, i) => autoresData[i % autoresData.length]);
   }, [autoresData]);
+
+  useEffect(() => {
+    if (slidesData.length > 0) {
+      const urls = slidesData.map((a) => a.rutaImagen).filter(Boolean);
+      urls.forEach((src) => {
+        const img = new Image();
+        img.src = src;
+      });
+    }
+  }, [slidesData]);
 
   useEffect(() => {
     if (slidesData.length > 0 && swiperRef.current) {
       const swiper = new Swiper(swiperRef.current, {
         modules: [Autoplay, Pagination],
         slidesPerView: 1,
-        centeredSlides: true,
+        centeredSlides: false,
         spaceBetween: 20,
-        loop: true,
-        loopedSlides: slidesData.length,
-        loopAdditionalSlides: 6,
-        loopedSlidesLimit: false,
+        loop: false,
+        rewind: true,
         watchSlidesProgress: true,
         preloadImages: true,
+        initialSlide: 0,
+        speed: 600,
         autoplay: {
           delay: 5000,
           disableOnInteraction: false,
@@ -43,6 +53,11 @@ const AutorSlider = () => {
           el: ".swiper-pagination",
           clickable: true,
           dynamicBullets: true,
+        },
+        on: {
+          reachEnd(sw) {
+            sw.slideTo(0, 0);
+          },
         },
         breakpoints: {
           320: {
@@ -98,7 +113,7 @@ const AutorSlider = () => {
         <section className="swiper" ref={swiperRef}>
           <div className="swiper-wrapper">
             {slidesData.map((autor, i) => (
-              <AutorSlide key={`${autor.autorId}-${i}`} autor={autor} />
+              <AutorSlide key={`${autor.autorId}-${i}`} autor={autor} eager={i < 6} />
             ))}
           </div>
           <div className="swiper-pagination"></div>

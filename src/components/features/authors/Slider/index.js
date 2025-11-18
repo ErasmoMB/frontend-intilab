@@ -2,7 +2,7 @@ import React, { memo } from "react";
 import AuthorDetails from "../AuthorDetails";
 import ChartContainer from "../ChartContainer";
 
-const AutorSlide = memo(({ autor }) => {
+const AutorSlide = memo(({ autor, eager = false }) => {
   return (
     <div className="swiper-slide">
       <div className="slide-content">
@@ -11,7 +11,8 @@ const AutorSlide = memo(({ autor }) => {
             src={autor.rutaImagen}
             alt={`Imagen de ${autor.nombreCompleto}`}
             className="img-fluid autor-img"
-            loading="lazy"
+            loading={eager ? "eager" : undefined}
+            fetchpriority={eager ? "high" : undefined}
           />
         </div>
         <AuthorDetails autor={autor} />

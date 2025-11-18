@@ -39,6 +39,12 @@ const Footer = memo(() => {
                 />
               </div>
             </div>
+            <Link to="/login" className="admin-access" aria-label="Acceso administrador">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="11" fill="currentColor"/>
+                <path d="M12 12c2.209 0 4-1.791 4-4s-1.791-4-4-4-4 1.791-4 4 1.791 4 4 4zm0 2c-3.315 0-6 2.239-6 5v1h12v-1c0-2.761-2.685-5-6-5z" fill="#fff"/>
+              </svg>
+            </Link>
           </div>
         </div>
       </div>

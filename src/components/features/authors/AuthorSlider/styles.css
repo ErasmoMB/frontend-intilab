@@ -1,5 +1,5 @@
 :root {
-  --slide-height-desktop: 700px;
+  --slide-height-desktop: 760px;
   --slide-height-tablet: 650px;
   --slide-height-mobile: 650px;
 }
@@ -23,17 +23,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px 10px;
+  /*padding: 20px 10px;*/
 }
 
 .swiper {
   width: 100%;
-  max-width: 1400px;
-  padding: 20px 0;
+  /* max-width: 1400px; */
+  /* padding: 25px 0; */
 }
 
 .swiper-wrapper {
-  margin: 0 auto;
   align-items: center;
 }
 
@@ -49,6 +48,7 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 .slide-content {
@@ -244,6 +244,7 @@
   justify-content: center;
   align-items: center;
   gap: 15px;
+  position: relative;
 }
 
 .footer .logo-laboratorio .col-uch {
@@ -271,6 +272,27 @@
   max-height: 40px;
   width: auto;
   object-fit: contain;
+}
+
+.admin-access {
+  order: -1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-start;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  text-decoration: none;
+  margin-right: 16px;
+  color: #6c757d;
+}
+
+.admin-access:hover {
+  filter: brightness(0.98);
+  color: #495057;
 }
 
 @media (min-width: 769px) {
@@ -316,8 +338,6 @@
   }
 
   .swiper-slide {
-    width: 100%;
-    max-width: 100%;
     height: var(--slide-height-tablet);
   }
 
@@ -422,6 +442,16 @@
     gap: 12px;
   }
 
+  .admin-access {
+    width: 40px;
+    height: 40px;
+    margin-right: 12px;
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
   .footer .logo-laboratorio .col-uch img {
     max-height: 36px;
   }
@@ -445,8 +475,6 @@
   }
 
   .swiper-slide {
-    width: 100%;
-    max-width: 100%;
     height: auto;
     min-height: var(--slide-height-mobile);
   }
@@ -555,6 +583,16 @@
     gap: 10px;
   }
 
+  .admin-access {
+    width: 38px;
+    height: 38px;
+    margin-right: 10px;
+    position: absolute;
+    left: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
   .footer .logo-laboratorio .col-uch img {
     max-height: 32px;
   }
@@ -571,7 +609,6 @@
 
 @media (min-width: 1024px) {
   .swiper-slide {
-    max-width: 380px;
     height: var(--slide-height-desktop);
   }
 
@@ -600,7 +637,6 @@
 
 @media (min-width: 1440px) {
   .swiper-slide {
-    max-width: 420px;
     height: var(--slide-height-desktop);
   }
   
