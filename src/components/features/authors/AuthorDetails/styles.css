@@ -1,0 +1,48 @@
+.academic-degrees {
+  display: flex;
+  flex-direction: column;
+  max-height: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 5px;
+}
+
+.academic-degrees::-webkit-scrollbar {
+  width: 6px;
+}
+
+.academic-degrees::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.academic-degrees::-webkit-scrollbar-thumb {
+  background: rgba(0, 123, 255, 0.5);
+  border-radius: 10px;
+}
+
+.academic-degrees::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 123, 255, 0.7);
+}
+
+.academic-degrees h5 {
+  padding: 10px;
+  border-radius: 10px;
+  margin: 5px 0;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(5px);
+  font-weight: bold;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  font-size: 0.65rem;
+  text-align: left;
+}
+
+.academic-degrees img {
+  transition: transform 0.3s ease, filter 0.3s ease;
+  filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.7));
+}
+
+.academic-degrees h5:hover img {
+  transform: rotate(10deg) scale(1.1);
+}
