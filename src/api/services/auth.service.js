@@ -1,20 +1,15 @@
 import api from "../config/axios";
 
-const ADMIN_USERNAME = "admin";
-const ADMIN_PASSWORD = "admin";
-
 export const login = async (username, password) => {
   try {
-    if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-      const token = process.env.REACT_APP_SECRET_KEY || "dev-secret-key-change-in-production";
-      localStorage.setItem("authToken", token);
-      localStorage.setItem("isAuthenticated", "true");
-      return { success: true, token };
-    } else {
-      throw new Error("Credenciales inválidas");
-    }
+    const response = await api.post("/api/auth/login", { username, password });
+    const { token } = response.data;
+    localStorage.setItem("authToken", token);
+    localStorage.setItem("isAuthenticated", "true");
+    return { success: true, token };
   } catch (error) {
-    throw error;
+    const message = error.response?.data?.detail || error.message || "Error al iniciar sesión";
+    return { success: false, error: message };
   }
 };
 
@@ -27,7 +22,5 @@ export const getAuthToken = () => {
   return localStorage.getItem("authToken");
 };
 
-export const isAuthenticated = () => {
-  return localStorage.getItem("isAuthenticated") === "true";
-};
+export const isAuthenticated = () => localStorage.getItem("isAuthenticated") === "true";
 

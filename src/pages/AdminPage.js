@@ -10,7 +10,8 @@ import {
 import { validateFormData } from "../utils/validators";
 import Loading from "../components/common/Loading";
 import ErrorMessage from "../components/common/ErrorMessage";
-import "./AdminPage.css";
+import AdminSidebar from "../components/layout/AdminSidebar";
+import AdminNavbar from "../components/layout/AdminNavbar";
 
 const AdminPage = () => {
   const { logout } = useAuth();
@@ -18,6 +19,7 @@ const AdminPage = () => {
   const [investigadores, setInvestigadores] = useState([]);
   const [formError, setFormError] = useState("");
   const [showForm, setShowForm] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({
     autor_id: "",
@@ -112,6 +114,7 @@ const AdminPage = () => {
     });
     setEditingId(investigador._id);
     setShowForm(true);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleDelete = async (id) => {
@@ -137,167 +140,274 @@ const AdminPage = () => {
 
   if (loading && investigadores.length === 0) {
     return (
-      <div className="admin-container">
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
         <Loading message="Cargando investigadores..." />
       </div>
     );
   }
 
   return (
-    <div className="admin-container">
-      <div className="admin-header">
-        <h1>Gestión de Investigadores</h1>
-        <button onClick={logout} className="logout-button">
-          Cerrar Sesión
-        </button>
-      </div>
+    <div className="min-h-screen bg-slate-900">
+      <AdminSidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />
+      
+      <div className="lg:pl-64">
+        <AdminNavbar onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
+        
+        <main className="p-4 lg:p-6">
+          {/* Header */}
+          <div className="mb-6">
+            <h1 className="text-3xl font-bold text-white mb-2">Gestión de Investigadores</h1>
+            <p className="text-slate-400">Administra la información de los investigadores</p>
+          </div>
 
-      {error && (
-        <ErrorMessage message={error} onRetry={cargarInvestigadores} />
-      )}
-
-      <div className="admin-actions">
-        <button onClick={() => setShowForm(!showForm)} className="add-button">
-          {showForm ? "Cancelar" : "Agregar Investigador"}
-        </button>
-      </div>
-
-      {showForm && (
-        <div className="form-container">
-          <h2>{editingId ? "Editar" : "Nuevo"} Investigador</h2>
-          {formError && <div className="error-message">{formError}</div>}
-          <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label>Autor ID</label>
-              <input
-                type="text"
-                name="autor_id"
-                value={formData.autor_id}
-                onChange={handleInputChange}
-                required
-              />
+          {error && (
+            <div className="mb-6">
+              <ErrorMessage message={error} onRetry={cargarInvestigadores} />
             </div>
-            <div className="form-group">
-              <label>Nombre</label>
-              <input
-                type="text"
-                name="nombre"
-                value={formData.nombre}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label>Grados Académicos</label>
-              <div className="grado-input-group">
-                <input
-                  type="text"
-                  value={gradoInput}
-                  onChange={(e) => setGradoInput(e.target.value)}
-                  onKeyPress={(e) => {
-                    if (e.key === "Enter") {
-                      e.preventDefault();
-                      handleAddGrado();
-                    }
-                  }}
-                  placeholder="Agregar grado académico"
-                />
-                <button type="button" onClick={handleAddGrado}>
-                  Agregar
-                </button>
-              </div>
-              <div className="grados-list">
-                {formData.grado_academico.map((grado, index) => (
-                  <span key={index} className="grado-tag">
-                    {grado}
+          )}
+
+          {/* Action Button */}
+          <div className="mb-6">
+            <button
+              onClick={() => {
+                resetForm();
+                setShowForm(!showForm);
+              }}
+              className="inline-flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              </svg>
+              <span>{showForm ? "Cancelar" : "Agregar Investigador"}</span>
+            </button>
+          </div>
+
+          {/* Form */}
+          {showForm && (
+            <div className="mb-6 bg-slate-800 rounded-xl border border-slate-700 p-6">
+              <h2 className="text-xl font-semibold text-white mb-4">
+                {editingId ? "Editar" : "Nuevo"} Investigador
+              </h2>
+              
+              {formError && (
+                <div className="mb-4 bg-red-500/10 border border-red-500/50 rounded-lg p-3">
+                  <p className="text-red-400 text-sm">{formError}</p>
+                </div>
+              )}
+
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-300 mb-2">
+                      Autor ID
+                    </label>
+                    <input
+                      type="text"
+                      name="autor_id"
+                      value={formData.autor_id}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="ID del autor"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-slate-300 mb-2">
+                      Nombre
+                    </label>
+                    <input
+                      type="text"
+                      name="nombre"
+                      value={formData.nombre}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="Nombre completo"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-300 mb-2">
+                    Grados Académicos
+                  </label>
+                  <div className="flex gap-2 mb-2">
+                    <input
+                      type="text"
+                      value={gradoInput}
+                      onChange={(e) => setGradoInput(e.target.value)}
+                      onKeyPress={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          handleAddGrado();
+                        }
+                      }}
+                      placeholder="Agregar grado académico"
+                      className="flex-1 px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
                     <button
                       type="button"
-                      onClick={() => handleRemoveGrado(index)}
+                      onClick={handleAddGrado}
+                      className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors"
                     >
-                      ×
+                      Agregar
                     </button>
-                  </span>
-                ))}
-              </div>
-            </div>
-            <div className="form-group">
-              <label>Imagen</label>
-              <input type="file" accept="image/*" onChange={handleFileChange} />
-            </div>
-            <div className="form-actions">
-              <button type="submit" className="save-button">
-                {editingId ? "Actualizar" : "Crear"}
-              </button>
-              <button type="button" onClick={resetForm} className="cancel-button">
-                Cancelar
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {formData.grado_academico.map((grado, index) => (
+                      <span
+                        key={index}
+                        className="inline-flex items-center space-x-2 px-3 py-1 bg-blue-600/20 border border-blue-500/50 rounded-full text-blue-300 text-sm"
+                      >
+                        <span>{grado}</span>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveGrado(index)}
+                          className="text-blue-300 hover:text-red-400 transition-colors"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                </div>
 
-      <div className="table-container">
-        <table className="investigadores-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Autor ID</th>
-              <th>Nombre</th>
-              <th>Grados Académicos</th>
-              <th>Imagen</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {investigadores.length === 0 ? (
-              <tr>
-                <td colSpan="6" className="empty-message">
-                  No hay investigadores registrados
-                </td>
-              </tr>
-            ) : (
-              investigadores.map((inv) => (
-                <tr key={inv._id}>
-                  <td>{inv._id}</td>
-                  <td>{inv.autor_id}</td>
-                  <td>{inv.nombre}</td>
-                  <td>
-                    {inv.grado_academico?.join(", ") || "N/A"}
-                  </td>
-                  <td>
-                    {inv.ruta_imagen ? (
-                      <img
-                        src={inv.ruta_imagen}
-                        alt={inv.nombre}
-                        className="investigador-image"
-                      />
-                    ) : (
-                      "Sin imagen"
-                    )}
-                  </td>
-                  <td>
-                    <button
-                      onClick={() => handleEdit(inv)}
-                      className="edit-button"
-                    >
-                      Editar
-                    </button>
-                    <button
-                      onClick={() => handleDelete(inv._id)}
-                      className="delete-button"
-                    >
-                      Eliminar
-                    </button>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+                <div>
+                  <label className="block text-sm font-medium text-slate-300 mb-2">
+                    Imagen
+                  </label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700"
+                  />
+                </div>
+
+                <div className="flex gap-3 pt-4">
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {loading ? "Guardando..." : editingId ? "Actualizar" : "Crear"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={resetForm}
+                    className="px-6 py-2 bg-slate-600 hover:bg-slate-500 text-white font-semibold rounded-lg transition-colors"
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              </form>
+            </div>
+          )}
+
+          {/* Table */}
+          <div className="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-slate-700">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                      ID
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                      Autor ID
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                      Nombre
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                      Grados Académicos
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                      Imagen
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                      Acciones
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-700">
+                  {investigadores.length === 0 ? (
+                    <tr>
+                      <td colSpan="6" className="px-6 py-12 text-center text-slate-400">
+                        No hay investigadores registrados
+                      </td>
+                    </tr>
+                  ) : (
+                    investigadores.map((inv) => (
+                      <tr key={inv._id} className="hover:bg-slate-700/50 transition-colors">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
+                          {inv._id.substring(0, 8)}...
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
+                          {inv.autor_id}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-white font-medium">
+                          {inv.nombre}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-slate-300">
+                          <div className="flex flex-wrap gap-1">
+                            {inv.grado_academico?.slice(0, 2).map((grado, idx) => (
+                              <span
+                                key={idx}
+                                className="px-2 py-1 bg-blue-600/20 border border-blue-500/50 rounded text-blue-300 text-xs"
+                              >
+                                {grado}
+                              </span>
+                            ))}
+                            {inv.grado_academico?.length > 2 && (
+                              <span className="px-2 py-1 bg-slate-600 rounded text-slate-300 text-xs">
+                                +{inv.grado_academico.length - 2}
+                              </span>
+                            )}
+                            {!inv.grado_academico || inv.grado_academico.length === 0 ? (
+                              <span className="text-slate-500">N/A</span>
+                            ) : null}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          {inv.ruta_imagen ? (
+                            <img
+                              src={inv.ruta_imagen}
+                              alt={inv.nombre}
+                              className="w-12 h-12 object-cover rounded-lg border border-slate-600"
+                            />
+                          ) : (
+                            <span className="text-slate-500 text-sm">Sin imagen</span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm">
+                          <div className="flex items-center space-x-2">
+                            <button
+                              onClick={() => handleEdit(inv)}
+                              className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-xs font-medium"
+                            >
+                              Editar
+                            </button>
+                            <button
+                              onClick={() => handleDelete(inv._id)}
+                              className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors text-xs font-medium"
+                            >
+                              Eliminar
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </main>
       </div>
     </div>
   );
 };
 
 export default AdminPage;
-

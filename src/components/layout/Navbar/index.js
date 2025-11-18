@@ -1,75 +1,38 @@
-import React, { memo, useCallback } from "react";
+import React, { memo } from "react";
+import { Link } from "react-router-dom";
 
-const Navbar = memo(({ setChartType }) => {
-  const handleChartTypeChange = useCallback(
-    (type) => {
-      setChartType(type);
-    },
-    [setChartType]
-  );
+const Navbar = memo(({ onMenuClick, sidebarOpen, sidebarCollapsed }) => {
   return (
-    <nav className="navbar navbar-expand-lg navbar-custom">
-      <a className="navbar-brand" href="/">
-        Universidad de Ciencias y Humanidades
-      </a>
-      <button
-        className="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbarNav"
-        aria-controls="navbarNav"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <i className="fas fa-bars"></i>
-      </button>
-      <div className="collapse navbar-collapse" id="navbarNav">
-        <ul className="navbar-nav">
-          <li className="nav-item">
-            <a
-              className="nav-link"
-              href="#"
-              id="show-bar-chart"
-              onClick={() => handleChartTypeChange("bar-chart")}
-            >
-              <i className="fas fa-chart-bar"></i> Número de Documentos por
-              Autor
-            </a>
-          </li>
-          <li className="nav-item">
-            <a
-              className="nav-link"
-              href="#"
-              id="show-pie-chart"
-              onClick={() => handleChartTypeChange("pie-chart")}
-            >
-              <i className="fas fa-chart-pie"></i> Distribución de Áreas de
-              Especialización
-            </a>
-          </li>
-          <li className="nav-item">
-            <a
-              className="nav-link"
-              href="#"
-              id="show-citations-chart"
-              onClick={() => handleChartTypeChange("citations-chart")}
-            >
-              <i className="fas fa-th"></i> Número de Citas por Autor
-            </a>
-          </li>
-          <li className="nav-item">
-            <a
-              className="nav-link"
-              href="#"
-              id="show-all-charts"
-              onClick={() => handleChartTypeChange("all-charts")}
-            >
-              <i className="fas fa-eye"></i> Ver Todo
-            </a>
-          </li>
-        </ul>
-      </div>
-    </nav>
+    <header className="dashboard-header">
+      <nav className="dashboard-navbar">
+        <div className="navbar-content">
+          <button
+            className="navbar-menu-btn"
+            onClick={onMenuClick}
+            aria-label={sidebarOpen || sidebarCollapsed ? "Cerrar menú" : "Abrir menú"}
+          >
+            {sidebarOpen || sidebarCollapsed ? (
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            ) : (
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="3" y1="12" x2="21" y2="12" />
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <line x1="3" y1="18" x2="21" y2="18" />
+              </svg>
+            )}
+          </button>
+          <h1 className="navbar-title">Universidad de Ciencias y Humanidades</h1>
+          <Link to="/" className="navbar-back-btn" aria-label="Volver al slider">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M19 12H5M12 19l-7-7 7-7" />
+            </svg>
+          </Link>
+        </div>
+      </nav>
+    </header>
   );
 });
 
