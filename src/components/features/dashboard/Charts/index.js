@@ -11,7 +11,6 @@ const Charts = memo(({ chartType }) => {
   const [authorsData, setAuthorsData] = useState([]);
   const [documentsData, setDocumentsData] = useState([]);
   const [isMobile, setIsMobile] = useState(() => window.innerWidth < config.CHARTS.MOBILE_BREAKPOINT);
-  const [containersReady, setContainersReady] = useState(false);
   const barChartRef = useRef(null);
   const pieChartRef = useRef(null);
   const citationsChartRef = useRef(null);
@@ -29,7 +28,6 @@ const Charts = memo(({ chartType }) => {
     const fetchChartsData = async () => {
       try {
         setLoading(true);
-        setContainersReady(false);
         const [documentos, autoresResponse] = await Promise.all([
           obtenerDocumentos(),
           obtenerAutores(),
@@ -57,7 +55,10 @@ const Charts = memo(({ chartType }) => {
     
     const rect = barChartRef.current.getBoundingClientRect();
     const containerWidth = rect.width;
-    if (!containerWidth || containerWidth === 0) return;
+    if (!containerWidth || containerWidth === 0) {
+      setTimeout(() => createBarChart(authorsData, forceRecreate), 100);
+      return;
+    }
     
     if (chartInstancesRef.current.bar && !forceRecreate) {
       try {
@@ -189,7 +190,10 @@ const Charts = memo(({ chartType }) => {
     
     const rect = pieChartRef.current.getBoundingClientRect();
     const containerWidth = rect.width;
-    if (!containerWidth || containerWidth === 0) return;
+    if (!containerWidth || containerWidth === 0) {
+      setTimeout(() => createPieChart(seriesData, forceRecreate), 100);
+      return;
+    }
     
     if (chartInstancesRef.current.pie && !forceRecreate) {
       try {
@@ -307,7 +311,10 @@ const Charts = memo(({ chartType }) => {
     
     const rect = citationsChartRef.current.getBoundingClientRect();
     const containerWidth = rect.width;
-    if (!containerWidth || containerWidth === 0) return;
+    if (!containerWidth || containerWidth === 0) {
+      setTimeout(() => createCitationsChart(topCitations, forceRecreate), 100);
+      return;
+    }
     
     if (chartInstancesRef.current.citations && !forceRecreate) {
       try {
@@ -428,66 +435,17 @@ const Charts = memo(({ chartType }) => {
   );
 
   useEffect(() => {
-    if (loading || authorsData.length === 0 || !documentsData) {
-      setContainersReady(false);
-      return;
-    }
-
-    setContainersReady(false);
-    let retryCount = 0;
-    const maxRetries = 50;
-    let cancelled = false;
-    
-    const checkContainers = () => {
-      if (cancelled) return;
-      
-      const containers = [
-        chartType === "bar-chart" || chartType === "all-charts" ? barChartRef.current : null,
-        chartType === "pie-chart" || chartType === "all-charts" ? pieChartRef.current : null,
-        chartType === "citations-chart" || chartType === "all-charts" ? citationsChartRef.current : null,
-      ].filter(Boolean);
-
-      if (containers.length === 0) {
-        retryCount++;
-        if (retryCount < maxRetries) {
-          requestAnimationFrame(checkContainers);
-        }
-        return;
-      }
-
-      const allReady = containers.every(container => {
-        if (!container) return true;
-        const rect = container.getBoundingClientRect();
-        return rect.width > 0 && rect.height > 0;
-      });
-
-      if (allReady) {
-        setContainersReady(true);
-        setTimeout(() => {
-          if (!cancelled) {
-            createCharts(true);
-          }
-        }, 50);
-      } else {
-        retryCount++;
-        if (retryCount < maxRetries) {
-          requestAnimationFrame(checkContainers);
-        }
-      }
-    };
+    if (loading || authorsData.length === 0 || !documentsData) return;
 
     const timer = setTimeout(() => {
-      checkContainers();
-    }, 50);
-    
-    return () => {
-      cancelled = true;
-      clearTimeout(timer);
-    };
+      createCharts(true);
+    }, 200);
+
+    return () => clearTimeout(timer);
   }, [loading, authorsData, documentsData, chartType, createCharts]);
 
   useEffect(() => {
-    if (loading || authorsData.length === 0 || !documentsData || !containersReady) return;
+    if (loading || authorsData.length === 0 || !documentsData) return;
 
     const debouncedResize = debounce(() => {
       if (!loading && authorsData.length > 0) {
@@ -524,7 +482,7 @@ const Charts = memo(({ chartType }) => {
       window.removeEventListener("resize", debouncedResize);
       resizeObserver.disconnect();
     };
-  }, [loading, authorsData, documentsData, createCharts, containersReady, chartType]);
+  }, [loading, authorsData, documentsData, createCharts, chartType]);
 
   useEffect(() => {
     return () => {
@@ -535,10 +493,17 @@ const Charts = memo(({ chartType }) => {
     };
   }, []);
 
-  const showLoading = loading || authorsData.length === 0 || !containersReady;
+  const showLoading = loading || authorsData.length === 0;
 
   return (
-    <div id="charts" className="chart-container" style={{ position: 'relative', minHeight: showLoading ? '400px' : 'auto' }}>
+    <div id="charts" className="chart-container" style={{ 
+      position: 'relative', 
+      minHeight: showLoading ? '400px' : 'auto',
+      display: 'flex',
+      flexDirection: 'column',
+      width: '100%',
+      gap: '1.5rem'
+    }}>
       {showLoading && (
         <div style={{ 
           position: 'absolute', 
@@ -555,7 +520,15 @@ const Charts = memo(({ chartType }) => {
           <Loading message="Cargando gráficos..." />
         </div>
       )}
-      <div style={{ opacity: showLoading ? 0 : 1, transition: 'opacity 0.2s', visibility: showLoading ? 'hidden' : 'visible' }}>
+      <div style={{ 
+        opacity: showLoading ? 0 : 1, 
+        transition: 'opacity 0.2s', 
+        visibility: showLoading ? 'hidden' : 'visible',
+        display: 'flex',
+        flexDirection: 'column',
+        width: '100%',
+        gap: '1.5rem'
+      }}>
         {chartType === "bar-chart" && (
           <div className="chart-wrapper">
             <div id="bar-chart-container" ref={barChartRef} style={{ minHeight: '400px', width: '100%' }}></div>
