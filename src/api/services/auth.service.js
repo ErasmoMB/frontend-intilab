@@ -1,11 +1,13 @@
 import api from "../config/axios";
+import { ENDPOINTS } from "../config/endpoints";
+import { config } from "../../config";
 
 export const login = async (username, password) => {
   try {
-    const response = await api.post("/api/auth/login", { username, password });
+    const response = await api.post(ENDPOINTS.AUTH.LOGIN, { username, password });
     const { token } = response.data;
-    localStorage.setItem("authToken", token);
-    localStorage.setItem("isAuthenticated", "true");
+    localStorage.setItem(config.STORAGE.AUTH_TOKEN_KEY, token);
+    localStorage.setItem(config.STORAGE.AUTH_STATUS_KEY, "true");
     return { success: true, token };
   } catch (error) {
     const message = error.response?.data?.detail || error.message || "Error al iniciar sesión";
@@ -14,13 +16,15 @@ export const login = async (username, password) => {
 };
 
 export const logout = () => {
-  localStorage.removeItem("authToken");
-  localStorage.removeItem("isAuthenticated");
+  localStorage.removeItem(config.STORAGE.AUTH_TOKEN_KEY);
+  localStorage.removeItem(config.STORAGE.AUTH_STATUS_KEY);
 };
 
 export const getAuthToken = () => {
-  return localStorage.getItem("authToken");
+  return localStorage.getItem(config.STORAGE.AUTH_TOKEN_KEY);
 };
 
-export const isAuthenticated = () => localStorage.getItem("isAuthenticated") === "true";
+export const isAuthenticated = () => {
+  return localStorage.getItem(config.STORAGE.AUTH_STATUS_KEY) === "true";
+};
 

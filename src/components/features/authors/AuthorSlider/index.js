@@ -4,6 +4,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import { Autoplay, Pagination } from "swiper/modules";
 import useAutores from "../../../../hooks/useAutores";
+import useInstitucion from "../../../../hooks/useInstitucion";
 import AutorSlide from "../Slider";
 import Footer from "../../../layout/Footer";
 import Loading from "../../../common/Loading";
@@ -12,7 +13,12 @@ import "./styles.css";
 
 const AutorSlider = () => {
   const { autoresData, loading, error } = useAutores();
+  const { config } = useInstitucion();
   const swiperRef = useRef(null);
+  const swiperInstanceRef = useRef(null);
+  
+  const fondoDefault = require("../../../../assets/fondo.png");
+  const fondoSlider = config?.fondo_slider_url || fondoDefault;
 
   const slidesData = useMemo(() => {
     if (!autoresData || autoresData.length === 0) return [];
@@ -23,17 +29,22 @@ const AutorSlider = () => {
 
   useEffect(() => {
     if (slidesData.length > 0) {
-      const urls = slidesData.map((a) => a.rutaImagen).filter(Boolean);
-      urls.forEach((src) => {
-        const img = new Image();
-        img.src = src;
-      });
+      const preloadImages = () => {
+        const visibleSlides = slidesData.slice(0, 10);
+        visibleSlides.forEach((autor) => {
+          if (autor.rutaImagen) {
+            const img = new Image();
+            img.src = autor.rutaImagen;
+          }
+        });
+      };
+      preloadImages();
     }
   }, [slidesData]);
 
   useEffect(() => {
-    if (slidesData.length > 0 && swiperRef.current) {
-      const swiper = new Swiper(swiperRef.current, {
+    if (slidesData.length > 0 && swiperRef.current && !swiperInstanceRef.current) {
+      swiperInstanceRef.current = new Swiper(swiperRef.current, {
         modules: [Autoplay, Pagination],
         slidesPerView: 1,
         centeredSlides: false,
@@ -41,7 +52,11 @@ const AutorSlider = () => {
         loop: false,
         rewind: true,
         watchSlidesProgress: true,
-        preloadImages: true,
+        preloadImages: false,
+        lazy: {
+          loadPrevNext: true,
+          loadPrevNextAmount: 2,
+        },
         initialSlide: 0,
         speed: 600,
         autoplay: {
@@ -92,8 +107,9 @@ const AutorSlider = () => {
       });
 
       return () => {
-        if (swiper) {
-          swiper.destroy(true, true);
+        if (swiperInstanceRef.current) {
+          swiperInstanceRef.current.destroy(true, true);
+          swiperInstanceRef.current = null;
         }
       };
     }
@@ -109,7 +125,12 @@ const AutorSlider = () => {
 
   return (
     <div className="slider">
-      <div className="main-container">
+      <div 
+        className="main-container"
+        style={{
+          backgroundImage: `url(${fondoSlider})`
+        }}
+      >
         <section className="swiper" ref={swiperRef}>
           <div className="swiper-wrapper">
             {slidesData.map((autor, i) => (

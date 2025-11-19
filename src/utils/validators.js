@@ -1,3 +1,5 @@
+import { config } from "../config";
+
 export const validateAutorId = (autorId) => {
   if (!autorId || !autorId.trim()) {
     return "El Autor ID es requerido";
@@ -12,8 +14,8 @@ export const validateNombre = (nombre) => {
   if (!nombre || !nombre.trim()) {
     return "El nombre es requerido";
   }
-  if (nombre.trim().length < 2) {
-    return "El nombre debe tener al menos 2 caracteres";
+  if (nombre.trim().length < config.VALIDATION.MIN_NOMBRE_LENGTH) {
+    return `El nombre debe tener al menos ${config.VALIDATION.MIN_NOMBRE_LENGTH} caracteres`;
   }
   return null;
 };

@@ -22,6 +22,7 @@ const ChartContainer = memo(({ autor }) => {
         backgroundColor: "transparent",
         spacing: [10, 10, 10, 10],
         margin: [10, 10, 10, 10],
+        animation: false,
       },
       title: {
         text: "Áreas Temáticas",

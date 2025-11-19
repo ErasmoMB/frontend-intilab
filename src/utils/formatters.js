@@ -13,3 +13,20 @@ export const formatNombre = (nombre) => {
   return nombre.trim();
 };
 
+export const fixEncoding = (str) => {
+  if (!str || typeof str !== "string") return str;
+  try {
+    const fixed = decodeURIComponent(escape(str));
+    return fixed;
+  } catch (e) {
+    try {
+      const decoder = new TextDecoder("utf-8");
+      const encoder = new TextEncoder();
+      const bytes = encoder.encode(str);
+      return decoder.decode(bytes);
+    } catch (e2) {
+      return str;
+    }
+  }
+};
+

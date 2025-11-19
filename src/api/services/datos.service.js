@@ -11,9 +11,22 @@ export const obtenerAutores = async () => {
   }
 };
 
+export const obtenerAutoresUCH = async () => {
+  try {
+    const response = await retryRequest(() => api.get(ENDPOINTS.DATOS.AUTHORS_UCH));
+    const datos = response.data.autores_uch;
+    return {
+      total: datos?.total_autores_uch || 0,
+      autores: datos?.autores || [],
+    };
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const obtenerDatosBasicosAutores = async () => {
   try {
-    const response = await retryRequest(() => api.get(ENDPOINTS.INVESTIGADORES));
+    const response = await retryRequest(() => api.get("/datos"));
     return response.data;
   } catch (error) {
     throw error;

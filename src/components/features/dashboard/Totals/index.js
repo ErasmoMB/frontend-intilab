@@ -1,6 +1,7 @@
 import React, { memo, useEffect, useState } from "react";
-import { obtenerTotalDocumentos, obtenerTotalAutores } from "../../../../api/services";
+import { obtenerDocumentos, obtenerAutoresUCH } from "../../../../api/services";
 import { formatNumber } from "../../../../utils/formatters";
+import { calculateTotalDocuments } from "../../../../utils/dataHelpers";
 
 const Totals = memo(() => {
   const [loading, setLoading] = useState(true);
@@ -12,10 +13,12 @@ const Totals = memo(() => {
       try {
         setLoading(true);
         const [documentos, { total }] = await Promise.all([
-          obtenerTotalDocumentos(),
-          obtenerTotalAutores(),
+          obtenerDocumentos(),
+          obtenerAutoresUCH(),
         ]);
-        setTotalDocumentos(documentos || 0);
+        
+        const totalDocs = calculateTotalDocuments(documentos);
+        setTotalDocumentos(totalDocs);
         setTotalAutores(total || 0);
       } catch (error) {
         setTotalDocumentos(0);

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import ErrorMessage from "../components/common/ErrorMessage";
+import { config } from "../config";
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
@@ -19,7 +20,7 @@ const LoginPage = () => {
     const result = await login(username, password);
 
     if (result.success) {
-      navigate("/admin");
+      navigate(config.ROUTES.ADMIN);
     } else {
       setError(result.error || "Credenciales inválidas");
     }
@@ -31,13 +32,11 @@ const LoginPage = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="bg-slate-800 rounded-xl shadow-2xl p-8 border border-slate-700">
-          {/* Logo/Title */}
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-white mb-2">Reactwind</h1>
+            <h1 className="text-3xl font-bold text-white mb-2">Administrador</h1>
             <p className="text-slate-400">Iniciar Sesión</p>
           </div>
 
-          {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label htmlFor="username" className="block text-sm font-medium text-slate-300 mb-2">

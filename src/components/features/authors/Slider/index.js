@@ -11,8 +11,9 @@ const AutorSlide = memo(({ autor, eager = false }) => {
             src={autor.rutaImagen}
             alt={`Imagen de ${autor.nombreCompleto}`}
             className="img-fluid autor-img"
-            loading={eager ? "eager" : undefined}
-            fetchpriority={eager ? "high" : undefined}
+            loading={eager ? "eager" : "lazy"}
+            fetchpriority={eager ? "high" : "low"}
+            decoding="async"
           />
         </div>
         <AuthorDetails autor={autor} />
@@ -35,6 +36,10 @@ const AutorSlide = memo(({ autor, eager = false }) => {
       </div>
     </div>
   );
+}, (prevProps, nextProps) => {
+  return prevProps.autor.autorId === nextProps.autor.autorId &&
+         prevProps.autor.totalCitas === nextProps.autor.totalCitas &&
+         prevProps.autor.totalDocumentos === nextProps.autor.totalDocumentos;
 });
 
 AutorSlide.displayName = "AutorSlide";

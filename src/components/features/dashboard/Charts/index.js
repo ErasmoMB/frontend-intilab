@@ -1,38 +1,46 @@
 import React, { useEffect, useRef, useState, useCallback, useMemo, memo } from "react";
-import { obtenerDocumentos, obtenerTotalAutores } from "../../../../api/services";
+import { obtenerDocumentos, obtenerAutores } from "../../../../api/services";
 import Highcharts from "highcharts";
 import Loading from "../../../common/Loading";
 import { debounce } from "../../../../utils/debounce";
-
-const EXCLUDED_AUTHOR_IDS = ["56902581400", "57200970000", "57201023602"];
+import { config } from "../../../../config";
+import { calculateAuthorCitations, formatAuthorName, getAuthorId } from "../../../../utils/dataHelpers";
 
 const Charts = memo(({ chartType }) => {
   const [loading, setLoading] = useState(true);
   const [authorsData, setAuthorsData] = useState([]);
   const [documentsData, setDocumentsData] = useState([]);
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < config.CHARTS.MOBILE_BREAKPOINT);
+  const [containersReady, setContainersReady] = useState(false);
   const barChartRef = useRef(null);
   const pieChartRef = useRef(null);
   const citationsChartRef = useRef(null);
   const chartInstancesRef = useRef({});
 
   useEffect(() => {
+    const handleResize = debounce(() => {
+      setIsMobile(window.innerWidth < config.CHARTS.MOBILE_BREAKPOINT);
+    }, 150);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
     const fetchChartsData = async () => {
       try {
         setLoading(true);
-        const [documentos, { data: autores }] = await Promise.all([
+        setContainersReady(false);
+        const [documentos, autoresResponse] = await Promise.all([
           obtenerDocumentos(),
-          obtenerTotalAutores(),
+          obtenerAutores(),
         ]);
 
-        const autoresFiltrados = (autores || []).filter(
-          (autor) =>
-            !EXCLUDED_AUTHOR_IDS.includes(
-              autor["dc:identifier"]?.split(":")[1]
-            )
+        const autores = autoresResponse.autores || [];
+        const autoresFiltrados = autores.filter(
+          (autor) => !config.DATA.EXCLUDED_AUTHOR_IDS.includes(getAuthorId(autor))
         );
         setDocumentsData(documentos);
         setAuthorsData(autoresFiltrados);
-        createCharts(autoresFiltrados, documentos);
       } catch (error) {
         setAuthorsData([]);
         setDocumentsData({});
@@ -47,12 +55,17 @@ const Charts = memo(({ chartType }) => {
   const createBarChart = useCallback((authorsData, forceRecreate = false) => {
     if (!barChartRef.current) return;
     
-    const isMobile = window.innerWidth < 768;
-    const containerWidth = barChartRef.current.offsetWidth || 800;
+    const rect = barChartRef.current.getBoundingClientRect();
+    const containerWidth = rect.width;
+    if (!containerWidth || containerWidth === 0) return;
     
     if (chartInstancesRef.current.bar && !forceRecreate) {
       try {
-        chartInstancesRef.current.bar.setSize(containerWidth, isMobile ? 400 : 500, false);
+        chartInstancesRef.current.bar.setSize(
+          containerWidth,
+          isMobile ? config.CHARTS.MOBILE_HEIGHT : config.CHARTS.DESKTOP_HEIGHT,
+          false
+        );
       } catch (e) {
         chartInstancesRef.current.bar = null;
         forceRecreate = true;
@@ -63,8 +76,9 @@ const Charts = memo(({ chartType }) => {
       chartInstancesRef.current.bar = Highcharts.chart(barChartRef.current, {
         chart: {
           type: "bar",
-          height: isMobile ? 400 : 500,
+          height: isMobile ? config.CHARTS.MOBILE_HEIGHT : config.CHARTS.DESKTOP_HEIGHT,
           width: containerWidth,
+          animation: false,
         },
         title: {
           text: "Número de Documentos por Autor (Top 20)",
@@ -81,6 +95,7 @@ const Charts = memo(({ chartType }) => {
             style: {
               fontSize: isMobile ? "10px" : "12px",
             },
+            rotation: isMobile ? -45 : 0,
           },
         },
         yAxis: {
@@ -100,11 +115,11 @@ const Charts = memo(({ chartType }) => {
           rules: [
             {
               condition: {
-                maxWidth: 768,
+                maxWidth: config.CHARTS.MOBILE_BREAKPOINT,
               },
               chartOptions: {
                 chart: {
-                  height: 400,
+                  height: config.CHARTS.MOBILE_HEIGHT,
                 },
                 title: {
                   style: {
@@ -120,19 +135,14 @@ const Charts = memo(({ chartType }) => {
             name: "Documentos",
             data: authorsData
               .map((author) => {
-                const givenName =
-                  author["preferred-name"]?.["given-name"] || "";
-                const surname = author["preferred-name"]?.["surname"] || "";
-                const fullName =
-                  `${givenName} ${surname}`.trim() || "Nombre no disponible";
+                const fullName = formatAuthorName(author);
                 const documentCount = parseInt(author["document-count"]);
-
                 return [fullName, isNaN(documentCount) ? 0 : documentCount];
               })
               .sort((a, b) => b[1] - a[1])
-              .slice(0, 20),
+              .slice(0, config.CHARTS.TOP_DOCUMENTS),
             dataLabels: {
-              enabled: true,
+              enabled: !isMobile,
               format: "{point.y:.0f}",
               style: {
                 fontSize: isMobile ? "10px" : "12px",
@@ -146,7 +156,7 @@ const Charts = memo(({ chartType }) => {
         ],
       });
     }
-  }, []);
+  }, [isMobile]);
 
   const pieChartData = useMemo(() => {
     if (authorsData.length === 0) return [];
@@ -177,12 +187,17 @@ const Charts = memo(({ chartType }) => {
   const createPieChart = useCallback((seriesData, forceRecreate = false) => {
     if (!pieChartRef.current || !seriesData || seriesData.length === 0) return;
     
-    const isMobile = window.innerWidth < 768;
-    const containerWidth = pieChartRef.current.offsetWidth || 800;
+    const rect = pieChartRef.current.getBoundingClientRect();
+    const containerWidth = rect.width;
+    if (!containerWidth || containerWidth === 0) return;
     
     if (chartInstancesRef.current.pie && !forceRecreate) {
       try {
-        chartInstancesRef.current.pie.setSize(containerWidth, isMobile ? 400 : 500, false);
+        chartInstancesRef.current.pie.setSize(
+          containerWidth,
+          isMobile ? config.CHARTS.MOBILE_HEIGHT : config.CHARTS.DESKTOP_HEIGHT,
+          false
+        );
         chartInstancesRef.current.pie.series[0].setData(seriesData, true);
       } catch (e) {
         chartInstancesRef.current.pie = null;
@@ -197,8 +212,9 @@ const Charts = memo(({ chartType }) => {
           plotBorderWidth: null,
           plotShadow: false,
           type: "pie",
-          height: isMobile ? 400 : 500,
+          height: isMobile ? config.CHARTS.MOBILE_HEIGHT : config.CHARTS.DESKTOP_HEIGHT,
           width: containerWidth,
+          animation: false,
         },
         title: {
           text: "Distribución de Áreas de Especialización",
@@ -238,11 +254,11 @@ const Charts = memo(({ chartType }) => {
           rules: [
             {
               condition: {
-                maxWidth: 768,
+                maxWidth: config.CHARTS.MOBILE_BREAKPOINT,
               },
               chartOptions: {
                 chart: {
-                  height: 400,
+                  height: config.CHARTS.MOBILE_HEIGHT,
                 },
                 title: {
                   style: {
@@ -269,40 +285,37 @@ const Charts = memo(({ chartType }) => {
         ],
       });
     }
-  }, []);
+  }, [isMobile]);
 
   const citationsData = useMemo(() => {
     if (authorsData.length === 0 || !documentsData || !documentsData.documentos) return [];
     
     const seriesData = authorsData.map((author) => {
-      const authorId = author["dc:identifier"]?.split(":")[1];
-      let totalCitations = 0;
-
-      if (authorId && documentsData.documentos[authorId]) {
-        documentsData.documentos[authorId].forEach((document) => {
-          totalCitations += parseInt(document["citedby-count"]) || 0;
-        });
-      }
-
-      const fullName = `${author["preferred-name"]["surname"]}, ${author["preferred-name"]["given-name"]}`;
+      const totalCitations = calculateAuthorCitations(author, documentsData);
+      const fullName = formatAuthorName(author);
       return [fullName, totalCitations];
     });
 
     return seriesData
       .filter(([_, citations]) => citations > 0)
       .sort((a, b) => b[1] - a[1])
-      .slice(0, 5);
+      .slice(0, config.CHARTS.TOP_CITATIONS);
   }, [authorsData, documentsData]);
 
   const createCitationsChart = useCallback((topCitations, forceRecreate = false) => {
     if (!citationsChartRef.current || !topCitations || topCitations.length === 0) return;
     
-    const isMobile = window.innerWidth < 768;
-    const containerWidth = citationsChartRef.current.offsetWidth || 800;
+    const rect = citationsChartRef.current.getBoundingClientRect();
+    const containerWidth = rect.width;
+    if (!containerWidth || containerWidth === 0) return;
     
     if (chartInstancesRef.current.citations && !forceRecreate) {
       try {
-        chartInstancesRef.current.citations.setSize(containerWidth, isMobile ? 400 : 500, false);
+        chartInstancesRef.current.citations.setSize(
+          containerWidth,
+          isMobile ? config.CHARTS.MOBILE_HEIGHT : config.CHARTS.DESKTOP_HEIGHT,
+          false
+        );
         chartInstancesRef.current.citations.series[0].setData(topCitations, true);
       } catch (e) {
         chartInstancesRef.current.citations = null;
@@ -314,8 +327,9 @@ const Charts = memo(({ chartType }) => {
       chartInstancesRef.current.citations = Highcharts.chart(citationsChartRef.current, {
         chart: {
           type: "column",
-          height: isMobile ? 400 : 500,
+          height: isMobile ? config.CHARTS.MOBILE_HEIGHT : config.CHARTS.DESKTOP_HEIGHT,
           width: containerWidth,
+          animation: false,
         },
         title: {
           text: "Top 5 Autores por Número de Citas",
@@ -331,6 +345,7 @@ const Charts = memo(({ chartType }) => {
               fontSize: isMobile ? "10px" : "13px",
               fontFamily: "Verdana, sans-serif",
             },
+            rotation: isMobile ? -90 : -45,
           },
         },
         yAxis: {
@@ -354,11 +369,11 @@ const Charts = memo(({ chartType }) => {
           rules: [
             {
               condition: {
-                maxWidth: 768,
+                maxWidth: config.CHARTS.MOBILE_BREAKPOINT,
               },
               chartOptions: {
                 chart: {
-                  height: 400,
+                  height: config.CHARTS.MOBILE_HEIGHT,
                 },
                 title: {
                   style: {
@@ -382,7 +397,7 @@ const Charts = memo(({ chartType }) => {
             name: "Citas",
             data: topCitations,
             dataLabels: {
-              enabled: true,
+              enabled: !isMobile,
               format: "{point.y:.0f}",
               style: {
                 fontSize: isMobile ? "10px" : "12px",
@@ -393,10 +408,12 @@ const Charts = memo(({ chartType }) => {
         ],
       });
     }
-  }, []);
+  }, [isMobile]);
 
   const createCharts = useCallback(
     (forceRecreate = false) => {
+      if (loading || authorsData.length === 0) return;
+      
       if (chartType === "bar-chart" || chartType === "all-charts") {
         createBarChart(authorsData, forceRecreate);
       }
@@ -407,44 +424,98 @@ const Charts = memo(({ chartType }) => {
         createCitationsChart(citationsData, forceRecreate);
       }
     },
-    [chartType, authorsData, pieChartData, citationsData, createBarChart, createPieChart, createCitationsChart]
+    [chartType, authorsData, pieChartData, citationsData, createBarChart, createPieChart, createCitationsChart, loading]
   );
 
   useEffect(() => {
-    if (!loading && authorsData.length > 0 && documentsData) {
-      createCharts(true);
+    if (loading || authorsData.length === 0 || !documentsData) {
+      setContainersReady(false);
+      return;
     }
-  }, [loading, createCharts]);
 
-  useEffect(() => {
-    if (loading || authorsData.length === 0 || !documentsData) return;
+    setContainersReady(false);
+    let retryCount = 0;
+    const maxRetries = 50;
+    let cancelled = false;
+    
+    const checkContainers = () => {
+      if (cancelled) return;
+      
+      const containers = [
+        chartType === "bar-chart" || chartType === "all-charts" ? barChartRef.current : null,
+        chartType === "pie-chart" || chartType === "all-charts" ? pieChartRef.current : null,
+        chartType === "citations-chart" || chartType === "all-charts" ? citationsChartRef.current : null,
+      ].filter(Boolean);
 
-    const debouncedResize = debounce(() => {
-      createCharts(false);
-    }, 250);
+      if (containers.length === 0) {
+        retryCount++;
+        if (retryCount < maxRetries) {
+          requestAnimationFrame(checkContainers);
+        }
+        return;
+      }
 
-    const resizeObserver = new ResizeObserver((entries) => {
-      let hasValidEntry = false;
-      for (const entry of entries) {
-        if (entry.contentRect.width > 0) {
-          hasValidEntry = true;
-          break;
+      const allReady = containers.every(container => {
+        if (!container) return true;
+        const rect = container.getBoundingClientRect();
+        return rect.width > 0 && rect.height > 0;
+      });
+
+      if (allReady) {
+        setContainersReady(true);
+        setTimeout(() => {
+          if (!cancelled) {
+            createCharts(true);
+          }
+        }, 50);
+      } else {
+        retryCount++;
+        if (retryCount < maxRetries) {
+          requestAnimationFrame(checkContainers);
         }
       }
-      if (hasValidEntry) {
-        debouncedResize();
+    };
+
+    const timer = setTimeout(() => {
+      checkContainers();
+    }, 50);
+    
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [loading, authorsData, documentsData, chartType, createCharts]);
+
+  useEffect(() => {
+    if (loading || authorsData.length === 0 || !documentsData || !containersReady) return;
+
+    const debouncedResize = debounce(() => {
+      if (!loading && authorsData.length > 0) {
+        createCharts(false);
+      }
+    }, config.UI.CHART_RESIZE_DEBOUNCE);
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.contentRect.width > 0) {
+          debouncedResize();
+          break;
+        }
       }
     });
 
     const chartContainers = [
-      barChartRef.current,
-      pieChartRef.current,
-      citationsChartRef.current,
+      chartType === "bar-chart" || chartType === "all-charts" ? barChartRef.current : null,
+      chartType === "pie-chart" || chartType === "all-charts" ? pieChartRef.current : null,
+      chartType === "citations-chart" || chartType === "all-charts" ? citationsChartRef.current : null,
     ].filter(Boolean);
 
     chartContainers.forEach((container) => {
       if (container) {
-        resizeObserver.observe(container);
+        const rect = container.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) {
+          resizeObserver.observe(container);
+        }
       }
     });
 
@@ -452,53 +523,68 @@ const Charts = memo(({ chartType }) => {
     return () => {
       window.removeEventListener("resize", debouncedResize);
       resizeObserver.disconnect();
+    };
+  }, [loading, authorsData, documentsData, createCharts, containersReady, chartType]);
+
+  useEffect(() => {
+    return () => {
       Object.values(chartInstancesRef.current).forEach((chart) => {
-        if (chart && chart.destroy) {
-          chart.destroy();
-        }
+        if (chart?.destroy) chart.destroy();
       });
       chartInstancesRef.current = {};
     };
-  }, [loading, authorsData, documentsData, createCharts]);
+  }, []);
 
-  if (loading || authorsData.length === 0) {
-    return (
-      <div id="charts" className="chart-container">
-        <Loading message="Cargando gráficos..." />
-      </div>
-    );
-  }
+  const showLoading = loading || authorsData.length === 0 || !containersReady;
 
   return (
-    <div id="charts" className="chart-container">
-      {chartType === "bar-chart" && (
-        <div className="chart-wrapper">
-          <div id="bar-chart-container" ref={barChartRef}></div>
+    <div id="charts" className="chart-container" style={{ position: 'relative', minHeight: showLoading ? '400px' : 'auto' }}>
+      {showLoading && (
+        <div style={{ 
+          position: 'absolute', 
+          top: 0, 
+          left: 0, 
+          right: 0, 
+          bottom: 0, 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'center',
+          zIndex: 10,
+          backgroundColor: 'rgba(15, 23, 42, 0.95)'
+        }}>
+          <Loading message="Cargando gráficos..." />
         </div>
       )}
-      {chartType === "pie-chart" && (
-        <div className="chart-wrapper">
-          <div id="pie-chart-container" ref={pieChartRef}></div>
-        </div>
-      )}
-      {chartType === "citations-chart" && (
-        <div className="chart-wrapper">
-          <div id="citations-chart-container" ref={citationsChartRef}></div>
-        </div>
-      )}
-      {chartType === "all-charts" && (
-        <>
+      <div style={{ opacity: showLoading ? 0 : 1, transition: 'opacity 0.2s', visibility: showLoading ? 'hidden' : 'visible' }}>
+        {chartType === "bar-chart" && (
           <div className="chart-wrapper">
-            <div id="bar-chart-container" ref={barChartRef}></div>
+            <div id="bar-chart-container" ref={barChartRef} style={{ minHeight: '400px', width: '100%' }}></div>
           </div>
+        )}
+        {chartType === "pie-chart" && (
           <div className="chart-wrapper">
-            <div id="pie-chart-container" ref={pieChartRef}></div>
+            <div id="pie-chart-container" ref={pieChartRef} style={{ minHeight: '400px', width: '100%' }}></div>
           </div>
+        )}
+        {chartType === "citations-chart" && (
           <div className="chart-wrapper">
-            <div id="citations-chart-container" ref={citationsChartRef}></div>
+            <div id="citations-chart-container" ref={citationsChartRef} style={{ minHeight: '400px', width: '100%' }}></div>
           </div>
-        </>
-      )}
+        )}
+        {chartType === "all-charts" && (
+          <>
+            <div className="chart-wrapper">
+              <div id="bar-chart-container" ref={barChartRef} style={{ minHeight: '400px', width: '100%' }}></div>
+            </div>
+            <div className="chart-wrapper">
+              <div id="pie-chart-container" ref={pieChartRef} style={{ minHeight: '400px', width: '100%' }}></div>
+            </div>
+            <div className="chart-wrapper">
+              <div id="citations-chart-container" ref={citationsChartRef} style={{ minHeight: '400px', width: '100%' }}></div>
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 });
