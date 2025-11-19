@@ -17,7 +17,13 @@ const useInstitucion = () => {
         );
         setConfig(response.data);
       } catch (err) {
-        setError(err.message);
+        // Usar el mensaje de error mejorado del interceptor si está disponible
+        const errorMessage = err.userMessage || 
+                            err.response?.data?.detail || 
+                            err.message || 
+                            "Error al cargar la configuración de la institución";
+        setError(errorMessage);
+        // Usar valores por defecto si falla la carga
         setConfig({
           nombre: "Universidad de Ciencias y Humanidades",
           logo_principal_url: "",

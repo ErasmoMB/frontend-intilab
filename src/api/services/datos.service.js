@@ -26,7 +26,7 @@ export const obtenerAutoresUCH = async () => {
 
 export const obtenerDatosBasicosAutores = async () => {
   try {
-    const response = await retryRequest(() => api.get("/datos"));
+    const response = await retryRequest(() => api.get("/api/datos"));
     return response.data;
   } catch (error) {
     throw error;

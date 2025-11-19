@@ -25,6 +25,22 @@ api.interceptors.response.use(
       localStorage.removeItem(config.STORAGE.AUTH_STATUS_KEY);
       window.location.href = config.ROUTES.LOGIN;
     }
+    
+    // Mejorar mensajes de error para CORS y problemas de conexión
+    if (!error.response) {
+      if (error.message?.includes('CORS') || error.code === 'ERR_NETWORK') {
+        error.userMessage = "Error de conexión: El servidor no está respondiendo o hay un problema de CORS. Verifica que el backend esté en ejecución.";
+      } else if (error.code === 'ECONNABORTED' || error.message?.includes('timeout')) {
+        error.userMessage = "Tiempo de espera agotado: El servidor está tardando demasiado en responder.";
+      } else {
+        error.userMessage = "Error de conexión: No se pudo conectar con el servidor.";
+      }
+    } else if (error.response.status === 503) {
+      error.userMessage = "Servicio no disponible: El backend está temporalmente fuera de servicio. Por favor, intenta más tarde.";
+    } else if (error.response.status >= 500) {
+      error.userMessage = "Error del servidor: El servidor está experimentando problemas. Por favor, intenta más tarde.";
+    }
+    
     return Promise.reject(error);
   }
 );

@@ -105,7 +105,12 @@ const useAutores = () => {
         }
       } catch (error) {
         if (!cancelled) {
-          setError(config.MESSAGES.ERROR_LOAD_DATA);
+          // Usar el mensaje de error mejorado del interceptor si está disponible
+          const errorMessage = error.userMessage || 
+                              error.response?.data?.detail || 
+                              error.message || 
+                              config.MESSAGES.ERROR_LOAD_DATA;
+          setError(errorMessage);
           setLoading(false);
         }
       }
