@@ -3,7 +3,7 @@ const getApiBaseUrl = () => {
     return process.env.REACT_APP_API_URL;
   }
   if (process.env.NODE_ENV === "development") {
-    return "http://localhost:8000";
+    return "http://localhost:5000";
   }
   return "https://backend-intilab.onrender.com";
 };
@@ -46,9 +46,7 @@ export const config = {
   },
   DATA: {
     EXCLUDED_AUTHOR_IDS: ["56902581400", "57200970000", "57201023602"],
-    AUTHOR_ID_MAPPING: {
-      "59164833900": "58886913200",
-    },
+    AUTHOR_ID_MAPPING: {},
   },
   MESSAGES: {
     ERROR_LOAD_DATA: "Error al cargar los datos. Por favor, intente de nuevo.",
