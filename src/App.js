@@ -18,7 +18,7 @@ const AdminActualizarDatos = lazy(() => import("./pages/AdminActualizarDatos"));
 function App() {
   return (
     <AuthProvider>
-      <Router basename="/scopus">
+      <Router>
         <div className="App">
           <Suspense fallback={<Loading />}>
             <Routes>
