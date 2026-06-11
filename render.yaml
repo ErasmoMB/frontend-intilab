@@ -3,8 +3,10 @@ services:
     name: frontend-intilab
     env: node
     buildCommand: npm ci && npm run build
-    startCommand: npm start
+    startCommand: npx serve -s build -l $PORT
     envVars:
       - key: NODE_ENV
         value: production
+      - key: REACT_APP_API_URL
+        value: https://slider-scopus-backend.onrender.com
 
