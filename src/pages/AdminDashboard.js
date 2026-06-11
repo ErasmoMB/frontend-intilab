@@ -21,16 +21,9 @@ const AdminDashboard = () => {
   });
   const [topInvestigadores, setTopInvestigadores] = useState([]);
   const [chartType, setChartType] = useState("bar-chart");
-  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
 
   useEffect(() => {
     cargarEstadisticas();
-  }, []);
-
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const cargarEstadisticas = async () => {

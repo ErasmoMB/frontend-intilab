@@ -25,6 +25,7 @@ export const config = {
     ADMIN_DASHBOARD: "/admin/dashboard",
     ADMIN_INVESTIGADORES: "/admin/investigadores",
     ADMIN_CONFIGURACION: "/admin/configuracion",
+    ADMIN_ACTUALIZAR_DATOS: "/admin/actualizar-datos",
   },
   VALIDATION: {
     MIN_NOMBRE_LENGTH: 2,

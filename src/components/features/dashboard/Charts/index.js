@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback, useMemo, memo } from "react";
-import { obtenerDocumentos, obtenerAutores } from "../../../../api/services";
+import { obtenerDocumentos, obtenerAutores, obtenerAutoresAreas } from "../../../../api/services";
 import Highcharts from "highcharts";
 import Loading from "../../../common/Loading";
 import { debounce } from "../../../../utils/debounce";
@@ -9,6 +9,7 @@ import { calculateAuthorCitations, formatAuthorName, getAuthorId } from "../../.
 const Charts = memo(({ chartType }) => {
   const [loading, setLoading] = useState(true);
   const [authorsData, setAuthorsData] = useState([]);
+  const [areasData, setAreasData] = useState([]);
   const [documentsData, setDocumentsData] = useState([]);
   const [isMobile, setIsMobile] = useState(() => window.innerWidth < config.CHARTS.MOBILE_BREAKPOINT);
   const barChartRef = useRef(null);
@@ -28,17 +29,22 @@ const Charts = memo(({ chartType }) => {
     const fetchChartsData = async () => {
       try {
         setLoading(true);
-        const [documentos, autoresResponse] = await Promise.all([
+        const [documentos, autoresResponse, areasResponse] = await Promise.all([
           obtenerDocumentos(),
           obtenerAutores(),
+          obtenerAutoresAreas().catch(() => ({ autores: [] })),
         ]);
 
         const autores = autoresResponse.autores || [];
         const autoresFiltrados = autores.filter(
           (autor) => !config.DATA.EXCLUDED_AUTHOR_IDS.includes(getAuthorId(autor))
         );
+        const areas = (areasResponse?.autores || []).filter(
+          (autor) => !config.DATA.EXCLUDED_AUTHOR_IDS.includes(getAuthorId(autor))
+        );
         setDocumentsData(documentos);
         setAuthorsData(autoresFiltrados);
+        setAreasData(areas);
       } catch (error) {
         setAuthorsData([]);
         setDocumentsData({});
@@ -160,12 +166,12 @@ const Charts = memo(({ chartType }) => {
   }, [isMobile]);
 
   const pieChartData = useMemo(() => {
-    if (authorsData.length === 0) return [];
-    
-    const areaCounts = {};
-    const totalAuthors = authorsData.length;
+    if (areasData.length === 0) return [];
 
-    authorsData.forEach((author) => {
+    const areaCounts = {};
+    const totalAuthors = areasData.length;
+
+    areasData.forEach((author) => {
       const subjectAreas = author["subject-area"];
       if (Array.isArray(subjectAreas)) {
         subjectAreas.forEach((area) => {
@@ -183,7 +189,7 @@ const Charts = memo(({ chartType }) => {
       name: name,
       y: (count / totalAuthors) * 100,
     }));
-  }, [authorsData]);
+  }, [areasData]);
 
   const createPieChart = useCallback((seriesData, forceRecreate = false) => {
     if (!pieChartRef.current || !seriesData || seriesData.length === 0) return;

@@ -4,13 +4,17 @@ import HighchartsReact from "highcharts-react-official";
 
 const ChartContainer = memo(({ autor }) => {
   const subjectAreaData = useMemo(() => {
-    if (!autor || !autor.subjectArea) return [];
-    return Array.isArray(autor.subjectArea)
-      ? autor.subjectArea.map((area) => ({
-          name: area["$"],
-          y: parseInt(area["@frequency"]) || 0,
-        }))
-      : [];
+    const rawAreas = autor?.subjectArea?.length ? autor.subjectArea : (autor?.areasTematicas || []);
+    if (!Array.isArray(rawAreas) || rawAreas.length === 0) return [];
+
+    return rawAreas.map((area) => {
+      const name = area?.["$"] || area?.name || area?.label || "Sin área";
+      const frequency = parseInt(area?.["@frequency"] || area?.frequency || area?.value || 0, 10);
+      return {
+        name,
+        y: Number.isFinite(frequency) && frequency > 0 ? frequency : 1,
+      };
+    });
   }, [autor]);
 
   const options = useMemo(

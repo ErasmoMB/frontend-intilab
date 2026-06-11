@@ -11,6 +11,15 @@ export const obtenerAutores = async () => {
   }
 };
 
+export const obtenerAutoresAreas = async () => {
+  try {
+    const response = await retryRequest(() => api.get(ENDPOINTS.DATOS.AUTHORS_AREAS));
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const obtenerAutoresUCH = async () => {
   try {
     const response = await retryRequest(() => api.get(ENDPOINTS.DATOS.AUTHORS_UCH));

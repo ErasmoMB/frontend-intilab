@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import {
   obtenerAutores,
+  obtenerAutoresAreas,
   obtenerDatosBasicosAutores,
   obtenerDocumentos,
 } from "../../api/services";
@@ -18,11 +19,12 @@ const useAutores = () => {
 
     const fetchData = async () => {
       try {
-        const [datosResponse, autoresResponse, documentosResponse] =
+        const [datosResponse, autoresResponse, documentosResponse, areasResponse] =
           await Promise.all([
             obtenerDatosBasicosAutores(),
             obtenerAutores(),
             obtenerDocumentos(),
+            obtenerAutoresAreas().catch(() => ({ autores: [] })),
           ]);
 
         if (cancelled) return;
@@ -30,6 +32,14 @@ const useAutores = () => {
         const investigadoresData = datosResponse || [];
         const autores = autoresResponse.autores || [];
         const documentos = documentosResponse || {};
+        const areasAutores = areasResponse?.autores || [];
+        const areasMap = {};
+        areasAutores.forEach((a) => {
+          const id = getAuthorId(a);
+          if (id && Array.isArray(a["subject-area"]) && a["subject-area"].length) {
+            areasMap[id] = a["subject-area"];
+          }
+        });
 
         const autoresIdsEnScopus = new Set(
           autores.map((author) => getAuthorId(author)).filter(Boolean)
@@ -45,7 +55,9 @@ const useAutores = () => {
             (item) => item.autor_id === autorId
           );
           let totalCitas = calculateTotalCitations(documentos, autorId);
-          let totalDocumentos = author["document-count"];
+          let totalDocumentos = Array.isArray(documentos?.documentos?.[autorId])
+            ? documentos.documentos[autorId].length
+            : parseInt(author["document-count"] || 0, 10);
 
           if (autorId && config.DATA.AUTHOR_ID_MAPPING[autorId]) {
             investigadorData = investigadoresData.find(
@@ -53,11 +65,11 @@ const useAutores = () => {
             );
           }
 
+          const apellido = fixEncoding(author["preferred-name"]?.["surname"] || "");
+          const nombre = fixEncoding(author["preferred-name"]?.["given-name"] || "");
           return {
             autorId: autorId || "",
-            nombreCompleto: `${
-              author["preferred-name"]?.["surname"] || ""
-            }, ${author["preferred-name"]?.["given-name"] || ""}`,
+            nombreCompleto: `${apellido}, ${nombre}`,
             rutaImagen: investigadorData ? investigadorData.ruta_imagen : "",
             gradosAcademicos: investigadorData
               ? investigadorData.grado_academico.join("<br>")
@@ -65,7 +77,7 @@ const useAutores = () => {
             totalCitas: totalCitas,
             totalDocumentos: totalDocumentos,
             areasTematicas: investigadorData ? investigadorData.areas_tematicas : [],
-            subjectArea: author["subject-area"],
+            subjectArea: areasMap[autorId] || author["subject-area"] || (investigadorData?.areas_tematicas || []),
           };
         });
 

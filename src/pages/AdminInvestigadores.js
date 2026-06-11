@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import useApi from "../hooks/useApi";
 import {
   obtenerInvestigadores,
@@ -28,11 +28,7 @@ const AdminInvestigadores = () => {
   const [editingGradoIndex, setEditingGradoIndex] = useState(null);
   const [editingGradoValue, setEditingGradoValue] = useState("");
 
-  useEffect(() => {
-    cargarInvestigadores();
-  }, []);
-
-  const cargarInvestigadores = async () => {
+  const cargarInvestigadores = useCallback(async () => {
     const result = await execute(() => obtenerInvestigadores());
     if (result.success) {
       const investigadoresCorregidos = result.data.map((inv) => ({
@@ -42,7 +38,11 @@ const AdminInvestigadores = () => {
       setInvestigadores(investigadoresCorregidos);
       setInvestigadoresFiltrados(investigadoresCorregidos);
     }
-  };
+  }, [execute]);
+
+  useEffect(() => {
+    cargarInvestigadores();
+  }, [cargarInvestigadores]);
 
   useEffect(() => {
     if (searchTerm.trim() === "") {

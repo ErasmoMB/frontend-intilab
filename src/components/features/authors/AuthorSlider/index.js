@@ -16,6 +16,7 @@ const AutorSlider = () => {
   const { config } = useInstitucion();
   const swiperRef = useRef(null);
   const swiperInstanceRef = useRef(null);
+
   
   const fondoDefault = require("../../../../assets/fondo.png");
   const fondoSlider = config?.fondo_slider_url || fondoDefault;
@@ -49,8 +50,7 @@ const AutorSlider = () => {
         slidesPerView: 1,
         centeredSlides: false,
         spaceBetween: 20,
-        loop: false,
-        rewind: true,
+        loop: true,
         watchSlidesProgress: true,
         preloadImages: false,
         lazy: {
@@ -68,11 +68,6 @@ const AutorSlider = () => {
           el: ".swiper-pagination",
           clickable: true,
           dynamicBullets: true,
-        },
-        on: {
-          reachEnd(sw) {
-            sw.slideTo(0, 0);
-          },
         },
         breakpoints: {
           320: {
@@ -125,6 +120,7 @@ const AutorSlider = () => {
 
   return (
     <div className="slider">
+
       <div 
         className="main-container"
         style={{

@@ -6,6 +6,7 @@ export const ENDPOINTS = {
   },
   DATOS: {
     AUTHORS: `${API_BASE}/datos/authors`,
+    AUTHORS_AREAS: `${API_BASE}/datos/authors/areas`,
     AUTHORS_UCH: `${API_BASE}/datos/authors/uch`,
     DOCUMENTS: `${API_BASE}/datos/documents`,
     DOCUMENTS_UCH: `${API_BASE}/datos/documents/uch`,
@@ -19,6 +20,12 @@ export const ENDPOINTS = {
   },
   PUBLIC: {
     INSTITUCION: `${API_BASE}/public/institucion`,
+  },
+  SCOPUS: {
+    AUTHORS: `${API_BASE}/scopus/authors`,
+    AUTHORS_UCH: `${API_BASE}/scopus/authors/uch`,
+    DOCUMENTS: `${API_BASE}/scopus/documents`,
+    DOCUMENTS_UCH: `${API_BASE}/scopus/documents/uch`,
   },
   HEALTH: "/health",
 };

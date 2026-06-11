@@ -13,6 +13,7 @@ const LoginPage = lazy(() => import("./pages/LoginPage"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const AdminInvestigadores = lazy(() => import("./pages/AdminInvestigadores"));
 const AdminConfiguracion = lazy(() => import("./pages/AdminConfiguracion"));
+const AdminActualizarDatos = lazy(() => import("./pages/AdminActualizarDatos"));
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
                 <Route path="dashboard" element={<AdminDashboard />} />
                 <Route path="investigadores" element={<AdminInvestigadores />} />
                 <Route path="configuracion" element={<AdminConfiguracion />} />
+                <Route path="actualizar-datos" element={<AdminActualizarDatos />} />
               </Route>
             </Routes>
           </Suspense>
